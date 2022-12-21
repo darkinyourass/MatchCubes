@@ -60,7 +60,6 @@ namespace Common.Gateway
             }
         }
 
-
         public ColorType GetColorType(ColorType colorType)
         {
             return colorType switch

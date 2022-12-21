@@ -8,13 +8,21 @@ namespace Common.View
 {
     public class ColorView : MonoBehaviour, ISelectable
     {
-        [Inject] private IColorPresenter _colorPresenter;
+        [Inject] 
+        private IColorPresenter _colorPresenter;
 
         [SerializeField] private ColorType _colorType;
         
-        private MeshRenderer _meshRenderer;
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public bool IsSelected { get; set; } = false;
+        public MeshRenderer MeshRenderer { get; set; }
+
+        public event Action<ISelectable> OnMouseDownEvent;
+        public event Action<ISelectable> OnMouseUpEvent;
+        public event Action<ISelectable> OnMouseOverEvent;
+
+        public bool IsSelected { get; set; }
+        
         public Transform ColorTypeTransform { get; set; }
 
         public ColorType ColorType
@@ -25,7 +33,7 @@ namespace Common.View
 
         private void Awake()
         {
-            _meshRenderer = GetComponent<MeshRenderer>();
+            MeshRenderer = GetComponent<MeshRenderer>();
             ColorTypeTransform = GetComponent<Transform>();
         }
 
@@ -41,7 +49,7 @@ namespace Common.View
                 _ => _colorPresenter.ColorTypeWhite
             };
 
-            reactiveProperty.Subscribe((type) => { SetMaterial(type); }).AddTo(this);
+            reactiveProperty.Subscribe(SetMaterial).AddTo(this);
         }
 
         private void Update()
@@ -54,59 +62,44 @@ namespace Common.View
             IsSelected = !IsSelected;
         }
 
+        private void OnMouseDown()
+        {
+            OnMouseDownEvent?.Invoke(this);
+        }
+
+        private void OnMouseOver()
+        {
+            OnMouseOverEvent?.Invoke(this);
+        }
+
+        private void OnMouseUp()
+        {
+            OnMouseUpEvent?.Invoke(this);
+        }
+
         private void SetMaterial(ColorType colorType)
         {
             switch (colorType)
             {
                 case ColorType.Red:
-                    if (IsSelected)
-                    {
-                        _meshRenderer.material.SetColor( "_Color", new Color32(200, 200, 200, 0));
-                    }
-                    else
-                    {
-                        _meshRenderer.material.SetColor("_Color", new Color32(173, 64, 64, 255));
-                    }
+                    MeshRenderer.material.SetColor(Color1,
+                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(173, 64, 64, 0));
                     break;
                 case ColorType.Green:
-                    if (IsSelected)
-                    {
-                        _meshRenderer.material.SetColor( "_Color", new Color32(200, 200, 200, 0));
-                    }
-                    else
-                    {
-                        _meshRenderer.material.SetColor("_Color", new Color32(41, 204, 70, 255));
-                    }
+                    MeshRenderer.material.SetColor(Color1,
+                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(41, 204, 70, 255));
                     break;
                 case ColorType.Blue:
-                    if (IsSelected)
-                    {
-                        _meshRenderer.material.SetColor( "_Color", new Color32(200, 200, 200, 0));
-                    }
-                    else
-                    {
-                        _meshRenderer.material.SetColor("_Color", new Color32(61, 151, 236, 255));
-                    }
+                    MeshRenderer.material.SetColor(Color1,
+                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(61, 151, 236, 255));
                     break;
                 case ColorType.Yellow:
-                    if (IsSelected)
-                    {
-                        _meshRenderer.material.SetColor( "_Color", new Color32(200, 200, 200, 0));
-                    }
-                    else
-                    {
-                        _meshRenderer.material.SetColor("_Color", new Color32(230, 238, 39, 255));
-                    }
+                    MeshRenderer.material.SetColor(Color1,
+                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(230, 238, 39, 255));
                     break;
                 case ColorType.White:
-                    if (IsSelected)
-                    {
-                        _meshRenderer.material.SetColor( "_Color", new Color32(200, 200, 200, 0));
-                    }
-                    else
-                    {
-                        _meshRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
-                    }
+                    MeshRenderer.material.SetColor(Color1,
+                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(255, 255, 255, 255));
                     break;
             }
         }
