@@ -15,14 +15,15 @@ namespace Common.View
         
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public MeshRenderer MeshRenderer { get; set; }
+        public MeshRenderer MeshRenderer { get; private set; }
 
-        public event Action<ISelectable> OnMouseDownEvent;
-        public event Action<ISelectable> OnMouseUpEvent;
-        public event Action<ISelectable> OnMouseOverEvent;
+        // public event Action<ISelectable> OnMouseDownEvent;
+        // public event Action<ISelectable> OnMouseUpEvent;
+        // public event Action<ISelectable> OnMouseOverEvent;
+        public event Action<ISelectable> OnMouseDownAsButton;
 
-        public bool IsSelected { get; set; }
-        
+        public bool IsSelected { get; private set; }
+
         public Transform ColorTypeTransform { get; set; }
 
         public ColorType ColorType
@@ -62,19 +63,24 @@ namespace Common.View
             IsSelected = !IsSelected;
         }
 
-        private void OnMouseDown()
-        {
-            OnMouseDownEvent?.Invoke(this);
-        }
+        // private void OnMouseDown()
+        // {
+        //     OnMouseDownEvent?.Invoke(this);
+        // }
+        //
+        // private void OnMouseOver()
+        // {
+        //     OnMouseOverEvent?.Invoke(this);
+        // }
+        //
+        // private void OnMouseUp()
+        // {
+        //     OnMouseUpEvent?.Invoke(this);
+        // }
 
-        private void OnMouseOver()
+        private void OnMouseUpAsButton()
         {
-            OnMouseOverEvent?.Invoke(this);
-        }
-
-        private void OnMouseUp()
-        {
-            OnMouseUpEvent?.Invoke(this);
+            OnMouseDownAsButton?.Invoke(this);
         }
 
         private void SetMaterial(ColorType colorType)
@@ -82,6 +88,8 @@ namespace Common.View
             switch (colorType)
             {
                 case ColorType.Red:
+                    // MeshRenderer.material.SetColor(Color1,
+                    //     IsSelected ? new Color32(200, 200, 200, 0) : new Color32(173, 64, 64, 0));
                     MeshRenderer.material.SetColor(Color1,
                         IsSelected ? new Color32(200, 200, 200, 0) : new Color32(173, 64, 64, 0));
                     break;
@@ -104,4 +112,6 @@ namespace Common.View
             }
         }
     }
+    
+    
 }

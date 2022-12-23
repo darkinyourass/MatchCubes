@@ -79,14 +79,14 @@ namespace UI
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        public void OnCameraLockButtonClick()
-        {
-            CameraMovement.IsCameraLocked = CameraMovement.IsCameraLocked switch
-            {
-                true => false,
-                false => true
-            };
-        }
+        // public void OnCameraLockButtonClick()
+        // {
+        //     CameraMovement.IsCameraLocked = CameraMovement.IsCameraLocked switch
+        //     {
+        //         true => false,
+        //         false => true
+        //     };
+        // }
 
         // public void ToggleSound()
         // {

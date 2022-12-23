@@ -22,7 +22,6 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            // _touchMovement = FindObjectOfType<TouchMovement>();
             _touchMovement.OnMatchCubes += AddToList;
         }
 

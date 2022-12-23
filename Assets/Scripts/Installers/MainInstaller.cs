@@ -14,7 +14,7 @@ public class MainInstaller : MonoInstaller
         var colorGateway = new ColorGateway();
         var progressBarGateway = new ProgressBarGateway();
         
-        // Colortype
+        // Color type
         var colorUsecase = new ColorUsecase(colorGateway);
         var colorPresenter = gameObject.AddComponent<ColorPresenter>();
         colorPresenter.Initialize(colorUsecase);

@@ -21,6 +21,7 @@ namespace Common.View
         private TMP_Text _textValue;
         
         public float MaxValue { get; set; }
+        
         private float CurrentValue { get => _currentValue;
             set => _currentValue = Mathf.Clamp(value, 0, _maxValue);
         }

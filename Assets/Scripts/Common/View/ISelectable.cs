@@ -4,7 +4,7 @@ namespace Common.View
 {
     public interface ISelectable
     {
-        ColorType ColorType { get; }
+        ColorType ColorType { get; set; }
         bool IsSelected { get; }
 
         Transform ColorTypeTransform { get; set; }
