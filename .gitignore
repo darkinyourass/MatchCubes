@@ -9,7 +9,6 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/Firebase/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -47,8 +46,6 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
-*.dll
-*.bundle
 
 # Unity3D generated meta files
 *.pidb.meta
