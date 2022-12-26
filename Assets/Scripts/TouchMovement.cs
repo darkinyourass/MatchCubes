@@ -34,12 +34,14 @@ public class TouchMovement : MonoBehaviour
 
     [SerializeField] private List<ColorView> _emptySelectablesNearCurrentSelectable = new ();
 
-    [SerializeField] private List<ISelectable> _emptySelectables = new();
+    [SerializeField] private List<ColorView> _emptySelectables = new();
 
     public event Action<ISelectable, ISelectable> OnMatchCubes;
     public event Action OnMatchCubesToProgressBar;
 
     [SerializeField] public List<ColorView> _colorViews = new ();
+    
+    public List<ColorView> EmptySelectables { get => _emptySelectables; set => _emptySelectables = value; }
 
     private void Start()
     {
@@ -133,14 +135,20 @@ public class TouchMovement : MonoBehaviour
         {
             foreach (var emptySelectable in _emptySelectablesNearCurrentSelectable)
             {
-                emptySelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
+                if (emptySelectable.ColorTypeTransform != null)
+                {
+                    emptySelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
+                }
             }
         }
         else if (_currentSelectable == null)
         {
             foreach (var emptySelectable in _emptySelectables)
             {
-                emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
+                if (emptySelectable.ColorTypeTransform != null)
+                {
+                    emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
+                }
             }
         }
     }
@@ -160,8 +168,8 @@ public class TouchMovement : MonoBehaviour
                         _currentSelectable.ColorTypeTransform.position = _currentPosition;
                         _secondSelectable.ColorTypeTransform.position = _secondPosition;
                         AudioManager.Instance.PlayAudioClip(_matchAudioClip);
-                        _emptySelectables.Add(_currentSelectable);
-                        _emptySelectables.Add(_secondSelectable);
+                        _emptySelectables.Add((ColorView)_currentSelectable);
+                        _emptySelectables.Add((ColorView)_secondSelectable);
                         OnMatchCubes?.Invoke(_currentSelectable, _secondSelectable);
                         OnMatchCubesToProgressBar?.Invoke();
                         

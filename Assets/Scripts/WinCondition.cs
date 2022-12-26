@@ -29,10 +29,9 @@ namespace Cubes
         {
             _colorViews.Add((ColorView)first);
             _colorViews.Add((ColorView)second);
-            if (_colorViews.Count == _touchMovement._colorViews.Count)
-            {
-                OnAllCubesMatched?.Invoke();
-            }
+            if (_colorViews.Count != _touchMovement._colorViews.Count) return;
+            OnAllCubesMatched?.Invoke();
+            _touchMovement.EmptySelectables.RemoveRange(0, _touchMovement.EmptySelectables.Count);
         }
     }
 }

@@ -43,6 +43,7 @@ namespace DefaultNamespace
         {
             foreach (var cube in Cubes)
             {
+                _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
                 Destroy(cube.gameObject);
             }
         }
