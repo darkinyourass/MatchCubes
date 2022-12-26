@@ -1,4 +1,6 @@
-﻿namespace UI.States
+﻿using UnityEngine;
+
+namespace UI.States
 {
     public class SettingsState: UIBaseState
     {
@@ -9,6 +11,7 @@
         public override void EnterState()
         {
             StateContext.SettingsCanvas.gameObject.SetActive(true);
+            Time.timeScale = 0;
         }
 
         protected override void UpdateState()
@@ -27,6 +30,12 @@
             {
                 SwitchState(StateFactory.Gameplay());
                 StateContext.IsResumeButtonPressed = false;
+            }
+
+            if (StateContext.IsMenuButtonPressed)
+            {
+                SwitchState(StateFactory.Menu());
+                StateContext.IsMenuButtonPressed = false;
             }
         }
     }

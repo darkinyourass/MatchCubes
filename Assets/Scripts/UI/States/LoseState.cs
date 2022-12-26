@@ -2,15 +2,15 @@
 
 namespace UI.States
 {
-    public class WinState: UIBaseState
+    public class LoseState: UIBaseState
     {
-        public WinState(UIStateMachine currentStateContext, UIStateFactory stateFactory) : base(currentStateContext, stateFactory)
+        public LoseState(UIStateMachine currentStateContext, UIStateFactory stateFactory) : base(currentStateContext, stateFactory)
         {
         }
 
         public override void EnterState()
         {
-            StateContext.WinCanvas.gameObject.SetActive(true);
+            StateContext.LoseCanvas.gameObject.SetActive(true);
             Time.timeScale = 0;
         }
 
@@ -21,7 +21,7 @@ namespace UI.States
 
         protected override void ExitState()
         {
-            StateContext.WinCanvas.gameObject.SetActive(false);
+            StateContext.LoseCanvas.gameObject.SetActive(false);
         }
         
         private void CheckStates()

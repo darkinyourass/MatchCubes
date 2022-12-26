@@ -1,12 +1,16 @@
 using Common.Gateway;
 using Common.Presenter;
 using Common.Usecase;
+using Common.View;
+using DefaultNamespace;
 using UnityEngine;
 using Zenject;
 
 public class MainInstaller : MonoInstaller
 {
     [SerializeField] private TouchMovement _touchMovement;
+    [SerializeField] private TestGrid _testGrid;
+    [SerializeField] private Timer _timer;
     
     public override void InstallBindings()
     {
@@ -32,10 +36,22 @@ public class MainInstaller : MonoInstaller
         Container.Bind<IProgressBarPresenter>().FromInstance(progressBarPresenter).AsTransient().NonLazy();
         
         BindTouchMovement();
+        BindGrid();
+        BindTimer();
     }
 
     private void BindTouchMovement()
     {
         Container.Bind<TouchMovement>().FromInstance(_touchMovement).AsSingle().NonLazy();
+    }
+
+    private void BindGrid()
+    {
+        Container.Bind<TestGrid>().FromInstance(_testGrid).AsSingle().NonLazy();
+    }
+
+    private void BindTimer()
+    {
+        Container.Bind<Timer>().FromInstance(_timer).AsSingle().NonLazy();
     }
 }

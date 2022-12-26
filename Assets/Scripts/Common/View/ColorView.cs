@@ -1,6 +1,5 @@
 ﻿using System;
 using Common.Presenter;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -15,7 +14,7 @@ namespace Common.View
         
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public MeshRenderer MeshRenderer { get; private set; }
+        public MeshRenderer MeshRenderer { get; set; }
 
         // public event Action<ISelectable> OnMouseDownEvent;
         // public event Action<ISelectable> OnMouseUpEvent;
@@ -23,7 +22,7 @@ namespace Common.View
         public event Action<ISelectable> OnMouseDownAsButton;
 
         public bool IsSelected { get; private set; }
-
+        
         public Transform ColorTypeTransform { get; set; }
 
         public ColorType ColorType
@@ -41,21 +40,11 @@ namespace Common.View
         private void Start()
         {
             _colorPresenter.SetType(_colorType);
-            var reactiveProperty = _colorType switch
-            {
-                ColorType.Red => _colorPresenter.ColorTypeRed,
-                ColorType.Green => _colorPresenter.ColorTypeGreen,
-                ColorType.Blue => _colorPresenter.ColorTypeBlue,
-                ColorType.Yellow => _colorPresenter.ColorTypeYellow,
-                _ => _colorPresenter.ColorTypeWhite
-            };
-
-            reactiveProperty.Subscribe(SetMaterial).AddTo(this);
         }
 
-        private void Update()
+        public void SetColor(int type)
         {
-            SetMaterial(_colorType);
+            SetMaterial((ColorType)type);
         }
 
         public void Select()
@@ -83,35 +72,36 @@ namespace Common.View
             OnMouseDownAsButton?.Invoke(this);
         }
 
-        private void SetMaterial(ColorType colorType)
+        public void SetCurrentSelectableMaterial()
+        {
+            MeshRenderer.material.SetColor(Color1, new Color32(200, 200, 200, 0));
+        }
+
+        public void SetMaterial(ColorType colorType)
         {
             switch (colorType)
             {
                 case ColorType.Red:
-                    // MeshRenderer.material.SetColor(Color1,
-                    //     IsSelected ? new Color32(200, 200, 200, 0) : new Color32(173, 64, 64, 0));
-                    MeshRenderer.material.SetColor(Color1,
-                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(173, 64, 64, 0));
+                    _colorType = _colorPresenter.ColorTypeRed.Value;
+                    MeshRenderer.material.SetColor(Color1, new Color32(173, 64, 64, 255));
                     break;
                 case ColorType.Green:
-                    MeshRenderer.material.SetColor(Color1,
-                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(41, 204, 70, 255));
+                    _colorType = _colorPresenter.ColorTypeGreen.Value;
+                    MeshRenderer.material.SetColor(Color1, new Color32(41, 204, 70, 255));
                     break;
                 case ColorType.Blue:
-                    MeshRenderer.material.SetColor(Color1,
-                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(61, 151, 236, 255));
+                    _colorType = _colorPresenter.ColorTypeBlue.Value;
+                    MeshRenderer.material.SetColor(Color1, new Color32(61, 151, 236, 255));
                     break;
                 case ColorType.Yellow:
-                    MeshRenderer.material.SetColor(Color1,
-                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(230, 238, 39, 255));
+                    _colorType = _colorPresenter.ColorTypeYellow.Value;
+                    MeshRenderer.material.SetColor(Color1, new Color32(230, 238, 39, 255));
                     break;
                 case ColorType.White:
-                    MeshRenderer.material.SetColor(Color1,
-                        IsSelected ? new Color32(200, 200, 200, 0) : new Color32(255, 255, 255, 255));
+                    _colorType = _colorPresenter.ColorTypeWhite.Value;
+                    MeshRenderer.material.SetColor(Color1, new Color32(255, 255, 255, 255));
                     break;
             }
         }
     }
-    
-    
 }

@@ -1,30 +1,55 @@
-﻿using DefaultNamespace;
-using TMPro;
+﻿using Common.View;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
+using Cubes;
 
 namespace UI
 {
     public class UIStateMachine : MonoBehaviour
     {
+        [Header("Canvases")]
         [SerializeField] private Canvas _settingsCanvas;
         [SerializeField] private Canvas _gamePlayCanvas;
         [SerializeField] private Canvas _winCanvas;
-        [SerializeField] private AudioClip _audioClip;
+        [SerializeField] private Canvas _menuCanvas;
+        [SerializeField] private Canvas _loseCanvas;
+        // [SerializeField] private AudioClip _audioClip;
+        
+        [Header("Time")]
+        [SerializeField] private float _timeValue;
+        [SerializeField] private float _currentTimeValue;
 
-        [SerializeField] private TMP_Text _coinsText;
+        [Header("Level type buttons")]
+        [SerializeField] private LevelTypeChoiceView[] _levelTypes;
+
+        public Timer Timer { get; private set; }
+
+        private float CurrentValue
+        {
+            get => _currentTimeValue; 
+            set => _currentTimeValue = Mathf.Clamp(value, 0, _timeValue);
+        }
+
+        private TestGrid Grid { get; set; }
+        
 
         private WinCondition _winCondition;
 
         public bool IsResumeButtonPressed { get; set; }
+        
         public bool IsSettingsButtonPressed { get; set; }
-        public bool IsLevelEnded { get; set; }
+        
+        public bool IsMenuButtonPressed { get; set; }
+        
+        public bool IsLevelWon { get; set; }
+        
+        public bool IsLevelLost { get; set; }
+        
+        public bool IsLevelSelected { get; set; }
 
-        // public static bool IsSoundToggle { get; set; }
-        // public static bool IsVibrationToggle { get; set; }
-        // public AudioClip AudioClip { get => _audioClip; set => _audioClip = value; }
-
-        // public Canvas MenuCanvas => _menuCanvas;
+        public Canvas MenuCanvas => _menuCanvas;
 
         public Canvas SettingsCanvas => _settingsCanvas;
 
@@ -32,31 +57,79 @@ namespace UI
 
         public Canvas WinCanvas => _winCanvas;
 
+        public Canvas LoseCanvas => _loseCanvas;
+
         public UIBaseState CurrentState { get; set; }
         private UIStateFactory StateFactory { get; set; }
+
+        [Inject]
+        private void Constructor(Timer timer, TestGrid grid)
+        {
+            Timer = timer;
+            Grid = grid;
+        }
 
         private void Awake()
         {
             _winCondition = FindObjectOfType<WinCondition>();
             _winCondition.OnAllCubesMatched += OnLevelEnd;
             StateFactory = new UIStateFactory(this);
-            CurrentState = StateFactory.Gameplay();
+            CurrentState = StateFactory.Menu();
             CurrentState.EnterState();
+            foreach (var levelType in _levelTypes)
+            {
+                levelType.OnLevelTypeButtonClicked += OnLevelChose;
+            }
         }
 
         private void Update()
         {
+            IsLost();
             CurrentState.UpdateStates();
+        }
+
+        private void FixedUpdate()
+        {
+            if (!Timer.IsTimerSet) return;
+            CurrentValue -= Time.fixedDeltaTime;
+            Timer.SetTimer(CurrentValue);
+        }
+
+        private void IsLost()
+        {
+            if (CurrentValue <= 0)
+            {
+                IsLevelLost = true;
+                Timer.IsTimerSet = false;
+                Grid.gameObject.SetActive(false);
+            }
+            else
+            {
+                IsLevelLost = false;
+            }
         }
 
         private void OnLevelEnd()
         {
-            IsLevelEnded = true;
+            IsLevelWon = true;
+            Grid.gameObject.SetActive(false);
+        }
+
+        private void OnLevelChose()
+        {
+            CurrentValue = _timeValue;
+            IsLevelSelected = true;
         }
 
         public void OnCancelButtonClick()
         {
             IsResumeButtonPressed = true;
+        }
+
+        public void OnMenuButtonClick()
+        {
+            IsMenuButtonPressed = true;
+            Grid.gameObject.SetActive(false);
         }
 
         public void OnSettingsButtonClick()
@@ -79,15 +152,6 @@ namespace UI
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        // public void OnCameraLockButtonClick()
-        // {
-        //     CameraMovement.IsCameraLocked = CameraMovement.IsCameraLocked switch
-        //     {
-        //         true => false,
-        //         false => true
-        //     };
-        // }
-
         // public void ToggleSound()
         // {
         //     IsSoundToggle = IsSoundToggle switch
@@ -105,7 +169,5 @@ namespace UI
         //         false => true
         //     };
         // }
-        
-        
     }
 }

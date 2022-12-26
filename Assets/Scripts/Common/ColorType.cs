@@ -2,10 +2,10 @@
 {
     public enum ColorType 
     {
-        White,
         Red,
         Green,
         Blue,
-        Yellow
+        Yellow,
+        White
     }
 }

@@ -2,15 +2,10 @@
 
 namespace Common.View
 {
-    public interface ISelectable
+    public interface ISelectable: IChangeColor
     {
-        ColorType ColorType { get; set; }
         bool IsSelected { get; }
-
         Transform ColorTypeTransform { get; set; }
-
-        MeshRenderer MeshRenderer { get; }
-
         void Select();
 
     }

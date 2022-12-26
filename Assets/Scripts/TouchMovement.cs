@@ -5,15 +5,19 @@ using Common;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
+using Zenject;
 
 public class TouchMovement : MonoBehaviour
 {
+    [Inject]
+    private TestGrid _testGrid;
+    
     [SerializeField] private float _movementDuration;
+    
+    [Header("Audio")]
     [SerializeField] private AudioClip _matchAudioClip;
     [SerializeField] private AudioClip _wrongAudioClip;
 
-    [SerializeField] private Material _transparentMaterial;
-    
     private ISelectable _currentSelectable;
     private ISelectable _secondSelectable;
     private ISelectable _selection;
@@ -21,6 +25,7 @@ public class TouchMovement : MonoBehaviour
     private Touch _touch;
 
     private int _selectableLayerMask;
+    private int _ignoreLayerMask;
         
     private Vector3 _currentPosition;
     private Vector3 _secondPosition;
@@ -28,12 +33,19 @@ public class TouchMovement : MonoBehaviour
     public event Action<ISelectable, ISelectable> OnMatchCubes;
     public event Action OnMatchCubesToProgressBar;
 
-    public ColorView[] ColorViews { get; private set; }
+    [field: SerializeField]
+    public List<ColorView> ColorViews { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
         _selectableLayerMask = LayerMask.NameToLayer("Selectables");
-        ColorViews = FindObjectsOfType<ColorView>();
+        _ignoreLayerMask = LayerMask.NameToLayer("Ignore Raycast");
+        // ColorViews = FindObjectsOfType<ColorView>();
+        _testGrid.OnGameStarted += StartGame;
+    }
+
+    private void StartGame()
+    {
         foreach (var colorView in ColorViews)
         {
             // colorView.OnMouseDownEvent += ClickDown;
@@ -42,20 +54,16 @@ public class TouchMovement : MonoBehaviour
             colorView.OnMouseDownAsButton += ClickOnCube;
         }
     }
-    
-    private void Update()
-    {
-        // SetLayerMask();
-    }
 
     private void ClickOnCube(ISelectable selectable)
     {
         _selection = selectable;
         switch (_currentSelectable)
         {
-            case null when _selection.ColorType != ColorType.White:
+            case null when _selection.MeshRenderer.enabled:
                 _selection.Select();
                 _currentSelectable = _selection;
+                _currentSelectable.SetCurrentSelectableMaterial();
                 _currentPosition = _currentSelectable.ColorTypeTransform.position;
                 _selection = null;
                 break;
@@ -63,6 +71,7 @@ public class TouchMovement : MonoBehaviour
             {
                 _currentSelectable.Select();
                 _secondSelectable = _selection;
+                _currentSelectable.SetMaterial(_currentSelectable.ColorType);
                 _secondSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
                 _secondPosition = _secondSelectable.ColorTypeTransform.position;
                 var currentType = _currentSelectable.ColorType;
@@ -120,24 +129,10 @@ public class TouchMovement : MonoBehaviour
             yield return null;
         }
         _currentSelectable.ColorTypeTransform.position = secondPosition;
-        SetNull();
+        SetSelectablesNull();
     }
 
-    private IEnumerator MoveSecondCubeCo(Vector3 secondPosition)
-    {
-        float timeElapsed = 0;
-        var startPosition = _secondSelectable.ColorTypeTransform.position;
-        while (timeElapsed < _movementDuration)
-        {
-            _secondSelectable.ColorTypeTransform.position = Vector3.Lerp(startPosition, secondPosition, timeElapsed / _movementDuration);
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-        _secondSelectable.ColorTypeTransform.position = secondPosition;
-        // SetNull();
-    }
-
-    private void SetNull()
+    private void SetSelectablesNull()
     {
         _secondSelectable = null;
         _currentSelectable = null;
@@ -182,23 +177,21 @@ public class TouchMovement : MonoBehaviour
             {
                 if (_secondSelectable != null)
                 {
-                    if (currentType == secondType)
+                    if (currentType == secondType && _currentSelectable.MeshRenderer.enabled && _secondSelectable.MeshRenderer.enabled)
                     {
-                        _currentSelectable.ColorType = ColorType.White;
-                        _secondSelectable.ColorType = ColorType.White;
+                        _currentSelectable.MeshRenderer.enabled = false;
+                        _secondSelectable.MeshRenderer.enabled = false;
                         _currentSelectable.ColorTypeTransform.position = _currentPosition;
                         _secondSelectable.ColorTypeTransform.position = _secondPosition;
                         AudioManager.Instance.PlayAudioClip(_matchAudioClip);
                         OnMatchCubes?.Invoke(_currentSelectable, _secondSelectable);
                         OnMatchCubesToProgressBar?.Invoke();
-                        SetNull();
+                        SetSelectablesNull();
                     }
-                    else if (_secondSelectable.ColorType == ColorType.White)
+                    else if (_secondSelectable.MeshRenderer.enabled == false)
                     {
-                        StartCoroutine(MoveSecondCubeCo(_currentPosition));
                         StartCoroutine(MoveCubeCo(_secondPosition));
-                        // _secondSelectable.ColorTypeTransform.position = _currentPosition;
-                        
+                        _secondSelectable.ColorTypeTransform.position = _currentPosition;
                         _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
                     }
                     else if (currentType != secondType)
@@ -206,7 +199,7 @@ public class TouchMovement : MonoBehaviour
                         AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
                         _currentSelectable.ColorTypeTransform.position = _currentPosition;
                         _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
-                        SetNull();
+                        SetSelectablesNull();
                     }
                 }
             }
@@ -214,7 +207,7 @@ public class TouchMovement : MonoBehaviour
             {
                 _currentSelectable.ColorTypeTransform.position = _currentPosition;
                 _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
-                SetNull();
+                SetSelectablesNull();
                 AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
             }
         }
@@ -222,7 +215,7 @@ public class TouchMovement : MonoBehaviour
         {
             _currentSelectable.ColorTypeTransform.position = _currentPosition;
             _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
-            SetNull();
+            SetSelectablesNull();
             AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
         }
     }

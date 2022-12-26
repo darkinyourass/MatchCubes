@@ -4,7 +4,7 @@ using Common.View;
 using UnityEngine;
 using Zenject;
 
-namespace DefaultNamespace
+namespace Cubes
 {
     public class WinCondition : MonoBehaviour
     {
@@ -29,13 +29,10 @@ namespace DefaultNamespace
         {
             _colorViews.Add((ColorView)first);
             _colorViews.Add((ColorView)second);
-            if (_colorViews.Count == _touchMovement.ColorViews.Length)
+            if (_colorViews.Count == _touchMovement.ColorViews.Count)
             {
                 OnAllCubesMatched?.Invoke();
             }
         }
-        
-        
-        
     }
 }

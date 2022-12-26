@@ -5,7 +5,7 @@
         Gameplay,
         Menu,
         Win,
-        Settings,
-        ChooseBonus
+        Lose,
+        Settings
     }
 }

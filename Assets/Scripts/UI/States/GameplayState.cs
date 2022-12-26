@@ -33,11 +33,16 @@ namespace UI.States
         
         private void CheckStates()
         {
-            if (StateContext.IsLevelEnded)
+            if (StateContext.IsLevelWon)
             {
                 SwitchState(StateFactory.Win());
+                StateContext.IsLevelWon = false;
             }
-
+            if (StateContext.IsLevelLost)
+            {
+                SwitchState(StateFactory.Lose());
+                StateContext.IsLevelLost = false;
+            }
             if (StateContext.IsSettingsButtonPressed)
             {
                 SwitchState(StateFactory.Settings());
