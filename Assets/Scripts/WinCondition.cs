@@ -29,7 +29,7 @@ namespace Cubes
         {
             _colorViews.Add((ColorView)first);
             _colorViews.Add((ColorView)second);
-            if (_colorViews.Count == _touchMovement.ColorViews.Count)
+            if (_colorViews.Count == _touchMovement._colorViews.Count)
             {
                 OnAllCubesMatched?.Invoke();
             }

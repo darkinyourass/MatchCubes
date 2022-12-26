@@ -35,7 +35,7 @@ namespace DefaultNamespace
         {
             CreateGrid();
             Cubes = GetComponentsInChildren<ColorView>();
-            _touchMovement.ColorViews.AddRange(Cubes);
+            _touchMovement._colorViews.AddRange(Cubes);
             OnGameStarted?.Invoke();
         }
 

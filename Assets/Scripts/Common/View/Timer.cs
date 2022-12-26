@@ -15,7 +15,6 @@ namespace Common.View
 
         public void SetTimer(float currentTime)
         {
-            // currentTime -= 1;
             float minutes = Mathf.FloorToInt(currentTime / 60);
             float seconds = Mathf.FloorToInt(currentTime % 60);
             _timerText.text = $"{minutes:00} : {seconds:00}";

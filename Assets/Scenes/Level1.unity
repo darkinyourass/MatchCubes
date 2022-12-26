@@ -2776,6 +2776,16 @@ PrefabInstance:
       propertyPath: _currentTime
       value: 300
       objectReference: {fileID: 0}
+    - target: {fileID: 1515555564428263704, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_BlockingObjects
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515555564428263704, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 1515555564826485234, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
       propertyPath: m_IsActive

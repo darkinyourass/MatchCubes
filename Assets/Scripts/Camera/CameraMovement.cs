@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
         MoveCamera();
         MoveCameraWithMouse();
     }

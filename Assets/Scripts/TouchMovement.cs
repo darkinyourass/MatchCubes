@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 public class TouchMovement : MonoBehaviour
@@ -30,23 +32,30 @@ public class TouchMovement : MonoBehaviour
     private Vector3 _currentPosition;
     private Vector3 _secondPosition;
 
+    [SerializeField] private List<ColorView> _emptySelectablesNearCurrentSelectable = new ();
+
+    [SerializeField] private List<ISelectable> _emptySelectables = new();
+
     public event Action<ISelectable, ISelectable> OnMatchCubes;
     public event Action OnMatchCubesToProgressBar;
 
-    [field: SerializeField]
-    public List<ColorView> ColorViews { get; private set; }
+    [SerializeField] public List<ColorView> _colorViews = new ();
 
     private void Start()
     {
         _selectableLayerMask = LayerMask.NameToLayer("Selectables");
         _ignoreLayerMask = LayerMask.NameToLayer("Ignore Raycast");
-        // ColorViews = FindObjectsOfType<ColorView>();
         _testGrid.OnGameStarted += StartGame;
+    }
+
+    private void Update()
+    {
+        SetLayerMask();
     }
 
     private void StartGame()
     {
-        foreach (var colorView in ColorViews)
+        foreach (var colorView in _colorViews)
         {
             // colorView.OnMouseDownEvent += ClickDown;
             // colorView.OnMouseOverEvent += ClickOver;
@@ -57,6 +66,10 @@ public class TouchMovement : MonoBehaviour
 
     private void ClickOnCube(ISelectable selectable)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
         _selection = selectable;
         switch (_currentSelectable)
         {
@@ -65,6 +78,7 @@ public class TouchMovement : MonoBehaviour
                 _currentSelectable = _selection;
                 _currentSelectable.SetCurrentSelectableMaterial();
                 _currentPosition = _currentSelectable.ColorTypeTransform.position;
+                SetEmptyCubes();
                 _selection = null;
                 break;
             case {IsSelected: true}:
@@ -77,46 +91,11 @@ public class TouchMovement : MonoBehaviour
                 var currentType = _currentSelectable.ColorType;
                 var secondType = _secondSelectable.ColorType;
                 CheckSelectables(currentType, secondType);
+                _emptySelectablesNearCurrentSelectable.RemoveRange(0, _emptySelectablesNearCurrentSelectable.Count);
                 break;
             }
         }
     }
-
-    // private void ClickDown(ISelectable selectable)
-    // {
-    //     _selection = selectable;
-    //     if (_currentSelectable == null && _selection.MeshRenderer.enabled)
-    //     {
-    //         _selection.Select();
-    //         _currentSelectable = _selection;
-    //         _currentSelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
-    //         _currentPosition = _currentSelectable.ColorTypeTransform.position;
-    //         _selection = null;
-    //     }
-    // }
-    //
-    // private void ClickOver(ISelectable selectable)
-    // {
-    //     if (selectable != null)
-    //     {
-    //         _selection = selectable;
-    //     }
-    // }
-    //
-    // private void ClickUp(ISelectable selectable)
-    // {
-    //     if (_currentSelectable is {IsSelected: true})
-    //     {
-    //         _currentSelectable.Select();
-    //         _secondSelectable = _selection;
-    //         _secondSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
-    //         _secondPosition = _secondSelectable.ColorTypeTransform.position;
-    //         var currentType = _currentSelectable.ColorType;
-    //         var secondType = _secondSelectable.ColorType;
-    //         CheckSelectables(currentType, secondType);
-    //         
-    //     }
-    // }
 
     private IEnumerator MoveCubeCo(Vector3 secondPosition)
     {
@@ -139,35 +118,32 @@ public class TouchMovement : MonoBehaviour
         _selection = null;
     }
 
-    // private void SetEmptyCubes()
-    // {
-    //     foreach (var colorView in ColorViews)
-    //     {
-    //         if (colorView.ColorTypeTransform.gameObject.layer == _ignoreLayerMask &&
-    //             colorView.MeshRenderer.enabled == false)
-    //         {
-    //             _emptySelectables.Add(colorView);
-    //         }
-    //     }
-    // }
+    private void SetEmptyCubes()
+    {
+        foreach (var colorView in _colorViews.Where
+                 (colorView => Vector3.Distance(_currentPosition, colorView.ColorTypeTransform.position) <= 1f))
+        {
+            _emptySelectablesNearCurrentSelectable.Add(colorView);
+        }
+    }
 
-    // private void SetLayerMask()
-    // {
-    //     if (_currentSelectable != null)
-    //     {
-    //         foreach (var emptySelectable in _emptySelectables)
-    //         {
-    //             emptySelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
-    //         }
-    //     }
-    //     else if (_currentSelectable == null)
-    //     {
-    //         foreach (var emptySelectable in _emptySelectables)
-    //         {
-    //             emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
-    //         }
-    //     }
-    // }
+    private void SetLayerMask()
+    {
+        if (_currentSelectable != null)
+        {
+            foreach (var emptySelectable in _emptySelectablesNearCurrentSelectable)
+            {
+                emptySelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
+            }
+        }
+        else if (_currentSelectable == null)
+        {
+            foreach (var emptySelectable in _emptySelectables)
+            {
+                emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
+            }
+        }
+    }
 
     private void CheckSelectables(ColorType currentType, ColorType secondType)
     {
@@ -184,8 +160,11 @@ public class TouchMovement : MonoBehaviour
                         _currentSelectable.ColorTypeTransform.position = _currentPosition;
                         _secondSelectable.ColorTypeTransform.position = _secondPosition;
                         AudioManager.Instance.PlayAudioClip(_matchAudioClip);
+                        _emptySelectables.Add(_currentSelectable);
+                        _emptySelectables.Add(_secondSelectable);
                         OnMatchCubes?.Invoke(_currentSelectable, _secondSelectable);
                         OnMatchCubesToProgressBar?.Invoke();
+                        
                         SetSelectablesNull();
                     }
                     else if (_secondSelectable.MeshRenderer.enabled == false)
