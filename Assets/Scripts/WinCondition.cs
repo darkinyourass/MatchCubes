@@ -8,7 +8,7 @@ namespace Cubes
 {
     public class WinCondition : MonoBehaviour
     {
-        [SerializeField] private List<ColorView> _colorViews = new List<ColorView>();
+        [SerializeField] private List<ISelectable> _colorViews = new ();
 
         public event Action OnAllCubesMatched;
         
@@ -22,13 +22,22 @@ namespace Cubes
 
         private void Awake()
         {
-            _touchMovement.OnMatchCubes += AddToList;
+            // _touchMovement.OnMatchCubes += AddToList;
+            _touchMovement.OnMatchingCubes += AddToList;
         }
 
-        private void AddToList(ISelectable first, ISelectable second)
+        // private void AddToList(ISelectable first, ISelectable second)
+        // {
+        //     _colorViews.Add((ColorView)first);
+        //     _colorViews.Add((ColorView)second);
+        //     if (_colorViews.Count != _touchMovement._colorViews.Count) return;
+        //     OnAllCubesMatched?.Invoke();
+        //     _touchMovement.EmptySelectables.RemoveRange(0, _touchMovement.EmptySelectables.Count);
+        // }
+        
+        private void AddToList(List<ISelectable> selectables)
         {
-            _colorViews.Add((ColorView)first);
-            _colorViews.Add((ColorView)second);
+            _colorViews.AddRange(selectables);
             if (_colorViews.Count != _touchMovement._colorViews.Count) return;
             OnAllCubesMatched?.Invoke();
             _touchMovement.EmptySelectables.RemoveRange(0, _touchMovement.EmptySelectables.Count);
