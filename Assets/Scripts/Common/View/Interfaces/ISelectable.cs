@@ -8,5 +8,9 @@ namespace Common.View
         Transform ColorTypeTransform { get; set; }
         void Select();
 
+        int SelectingAnimationHash { get; set; }
+        
+        Animator Animator { get; set; }
+
     }
 }

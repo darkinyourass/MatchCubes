@@ -14,26 +14,25 @@ namespace Common.View
         
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public MeshRenderer MeshRenderer { get; set; }
+        public int SelectingAnimationHash { get; set; }
 
-        // public event Action<ISelectable> OnMouseDownEvent;
-        // public event Action<ISelectable> OnMouseUpEvent;
-        // public event Action<ISelectable> OnMouseOverEvent;
+        public MeshRenderer MeshRenderer { get; private set; }
+        
+        public Animator Animator { get; set; }
+
         public event Action<ISelectable> OnMouseDownAsButton;
 
         public bool IsSelected { get; private set; }
         
         public Transform ColorTypeTransform { get; set; }
 
-        public ColorType ColorType
-        {
-            get => _colorType;
-            set => _colorType = value;
-        }
+        public ColorType ColorType => _colorType;
 
         private void Awake()
         {
             MeshRenderer = GetComponent<MeshRenderer>();
+            Animator = GetComponent<Animator>();
+            SelectingAnimationHash = Animator.StringToHash("IsSelecting");
             ColorTypeTransform = GetComponent<Transform>();
         }
 
@@ -52,29 +51,9 @@ namespace Common.View
             IsSelected = !IsSelected;
         }
 
-        // private void OnMouseDown()
-        // {
-        //     OnMouseDownEvent?.Invoke(this);
-        // }
-        //
-        // private void OnMouseOver()
-        // {
-        //     OnMouseOverEvent?.Invoke(this);
-        // }
-        //
-        // private void OnMouseUp()
-        // {
-        //     OnMouseUpEvent?.Invoke(this);
-        // }
-
         private void OnMouseUpAsButton()
         {
             OnMouseDownAsButton?.Invoke(this);
-        }
-
-        public void SetCurrentSelectableMaterial()
-        {
-            MeshRenderer.material.SetColor(Color1, new Color32(200, 200, 200, 0));
         }
 
         public void SetMaterial(ColorType colorType)

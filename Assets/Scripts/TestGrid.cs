@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Common.View;
+using ModestTree;
 using UnityEngine;
 using Zenject;
 using Random = System.Random;
@@ -16,7 +17,10 @@ namespace DefaultNamespace
         [SerializeField] private int _depth;
         [SerializeField] private GameObject _cubePrefab;
         
-        [SerializeField] private GridType _gridType;
+        public delegate void OnCounterValueChange(int counter);    
+        public OnCounterValueChange CounterValueChange;
+        
+        [field: SerializeField] public GridType GridType { get; private set; }
 
         public event Action OnGameStarted;
 
@@ -25,29 +29,47 @@ namespace DefaultNamespace
         
         [field: SerializeField]
         private ColorView[] Cubes { get; set; }
+        [field: SerializeField] private List<ColorView> AllCubes { get; set; }
         
         [Inject]
         private DiContainer _diContainer;
 
         private GameObject[,,] _grid;
 
+        private const int Counter = 3;
+        [SerializeField] private int _counter;
+
         private void OnEnable()
         {
             CreateGrid();
             Cubes = GetComponentsInChildren<ColorView>();
+            AllCubes.AddRange(Cubes);
             _touchMovement._colorViews.AddRange(Cubes);
             OnGameStarted?.Invoke();
         }
 
         private void OnDisable()
         {
-            foreach (var cube in Cubes)
+            foreach (var cube in AllCubes)
             {
-                _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
                 Destroy(cube.gameObject);
             }
+            AllCubes.RemoveRange(0, AllCubes.Count);
+            _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
         }
 
+        public void ReCreateGrid()
+        {
+            while (_counter < Counter)
+            {
+                _counter++;
+                CounterValueChange?.Invoke(_counter);
+                return;
+            }
+            _counter = 0;
+            CounterValueChange?.Invoke(_counter);
+        }
+        
         private int[] GenerateColorsPref(int amount) {
             var random = new Random();
             var colors = new List<int>();
@@ -83,7 +105,7 @@ namespace DefaultNamespace
 
         public void SetGridType(GridType gridType)
         {
-            _gridType = gridType;
+            GridType = gridType;
         }
     }
 }

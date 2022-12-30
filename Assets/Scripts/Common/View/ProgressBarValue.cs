@@ -36,7 +36,7 @@ namespace Common.View
         {
             _textValue = GetComponentInChildren<TMP_Text>();
             _fillImage = GetComponent<Image>();
-            _touchMovement.OnMatchCubesToProgressBar += AddCurrentValue;
+            // _touchMovement.OnMatchCubesToProgressBar += AddCurrentValue;
         }
 
         private void Start()

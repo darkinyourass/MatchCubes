@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046223c57ffe463584e1c6161d7e3f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorViews: []
+  _counter: 0
 --- !u!1 &1350676122
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,11 +89,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cee8b782e144799a154ec729cdfc491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _height: 4
-  _width: 4
-  _depth: 4
+  _height: 2
+  _width: 2
+  _depth: 2
   _cubePrefab: {fileID: 6108374576013174377, guid: b6dc88e7478567443a626367258b06f1,
     type: 3}
+  <GridType>k__BackingField: 2
+  <Cubes>k__BackingField: []
+  <AllCubes>k__BackingField: []
+  _counter: 0
 --- !u!1 &7056511328606504536
 GameObject:
   m_ObjectHideFlags: 0

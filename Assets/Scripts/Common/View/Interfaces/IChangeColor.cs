@@ -4,13 +4,11 @@ namespace Common.View
 {
     public interface IChangeColor
     {
-        ColorType ColorType { get; set; }
-        MeshRenderer MeshRenderer { get; set; }
+        ColorType ColorType { get; }
+        MeshRenderer MeshRenderer { get; }
 
         void SetColor(int type);
 
         void SetMaterial(ColorType colorType);
-
-        void SetCurrentSelectableMaterial();
     }
 }

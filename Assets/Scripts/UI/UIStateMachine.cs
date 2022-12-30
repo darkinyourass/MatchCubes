@@ -16,20 +16,19 @@ namespace UI
         [SerializeField] private Canvas _menuCanvas;
         [SerializeField] private Canvas _loseCanvas;
         // [SerializeField] private AudioClip _audioClip;
-        
-        [Header("Time")]
-        [SerializeField] private float _timeValue;
-        [SerializeField] private float _currentTimeValue;
+
+        private float _currentTimeValue;
 
         [Header("Level type buttons")]
-        [SerializeField] private LevelTypeChoiceView[] _levelTypes;
+        [SerializeField] private LevelTypeChoiceView _levelType;
 
         public Timer Timer { get; private set; }
 
-        private float CurrentValue
+        [field: SerializeField] public float TimeValue { get; set; }
+        public float CurrentValue
         {
             get => _currentTimeValue; 
-            set => _currentTimeValue = Mathf.Clamp(value, 0, _timeValue);
+            set => _currentTimeValue = Mathf.Clamp(value, 0, TimeValue);
         }
 
         private TestGrid Grid { get; set; }
@@ -76,10 +75,8 @@ namespace UI
             StateFactory = new UIStateFactory(this);
             CurrentState = StateFactory.Menu();
             CurrentState.EnterState();
-            foreach (var levelType in _levelTypes)
-            {
-                levelType.OnLevelTypeButtonClicked += OnLevelChose;
-            }
+            _levelType.OnLevelTypeButtonClicked += OnLevelChose;
+            
         }
 
         private void Update()
@@ -117,7 +114,7 @@ namespace UI
 
         private void OnLevelChose()
         {
-            CurrentValue = _timeValue;
+            CurrentValue = TimeValue;
             IsLevelSelected = true;
         }
 

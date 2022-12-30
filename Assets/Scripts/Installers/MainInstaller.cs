@@ -3,6 +3,7 @@ using Common.Presenter;
 using Common.Usecase;
 using Common.View;
 using DefaultNamespace;
+using UI;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +12,8 @@ public class MainInstaller : MonoInstaller
     [SerializeField] private TouchMovement _touchMovement;
     [SerializeField] private TestGrid _testGrid;
     [SerializeField] private Timer _timer;
-    
+    [SerializeField] private UIStateMachine _uiStateMachine;
+
     public override void InstallBindings()
     {
         // Gateways
@@ -38,6 +40,7 @@ public class MainInstaller : MonoInstaller
         BindTouchMovement();
         BindGrid();
         BindTimer();
+        BindUI();
     }
 
     private void BindTouchMovement()
@@ -53,5 +56,10 @@ public class MainInstaller : MonoInstaller
     private void BindTimer()
     {
         Container.Bind<Timer>().FromInstance(_timer).AsSingle().NonLazy();
+    }
+
+    private void BindUI()
+    {
+        Container.Bind<UIStateMachine>().FromInstance(_uiStateMachine).AsSingle().NonLazy();
     }
 }

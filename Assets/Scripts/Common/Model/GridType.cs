@@ -4,7 +4,6 @@
     {
         Default,
         DefaultTimer,
-        Endless,
         EndlessTimer
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
@@ -44,12 +43,10 @@ public class TouchMovement : MonoBehaviour
     
     private bool IsMoving { get; set; }
 
-    public event Action<ISelectable, ISelectable> OnMatchCubes;
-
     public event Action<List<ISelectable>> OnMatchingCubes;
-    public event Action OnMatchCubesToProgressBar;
-
-    private ColorView _colorView;
+    
+    // public event Action OnMatchCubesToProgressBar;
+    // private ColorView _colorView;
 
     [SerializeField] public List<ColorView> _colorViews = new ();
     
@@ -66,7 +63,6 @@ public class TouchMovement : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_currentSelectable);
         SetLayerMask();
     }
 
@@ -90,13 +86,14 @@ public class TouchMovement : MonoBehaviour
             case null when _selection.MeshRenderer.enabled:
                 _selection.Select();
                 _currentSelectable = _selection;
-                _currentSelectable.SetCurrentSelectableMaterial();
+                _currentSelectable.Animator.SetBool(_currentSelectable.SelectingAnimationHash , true);
                 _currentPosition = _currentSelectable.ColorTypeTransform.position;
                 SetEmptyCubes();
                 _selection = null;
                 break;
             case {IsSelected: true}:
             {
+                _currentSelectable.Animator.SetBool(_currentSelectable.SelectingAnimationHash , false);
                 _currentSelectable.Select();
                 _secondSelectable = _selection;
                 _currentSelectable.SetMaterial(_currentSelectable.ColorType);
@@ -171,12 +168,12 @@ public class TouchMovement : MonoBehaviour
         var heading = _secondPosition - _currentPosition;
         var distance = heading.magnitude;
         var direction = heading / distance;
-        if (direction.x % 1 != 0 || direction.y % 1 != 0 || direction.z % 1 != 0)
-        {
-            AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
-            SetSelectablesNull();
-            return;
-        }
+        // if (direction.x % 1 != 0 || direction.y % 1 != 0 || direction.z % 1 != 0)
+        // {
+        //     AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
+        //     SetSelectablesNull();
+        //     return;
+        // }
         var allCubes = Physics.RaycastAll(_currentPosition, direction, Vector3.Distance(_currentPosition, _secondPosition),
             _layerMask);
         
