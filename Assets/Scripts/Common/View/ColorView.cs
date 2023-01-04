@@ -14,6 +14,9 @@ namespace Common.View
         
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
+        public ParticleSystem ParticleSystem { get; set; }
+        private ParticleSystemRenderer _particleSystemRenderer;
+
         public int SelectingAnimationHash { get; set; }
 
         public MeshRenderer MeshRenderer { get; private set; }
@@ -28,22 +31,30 @@ namespace Common.View
 
         public ColorType ColorType => _colorType;
 
+        public LineRenderer LineRenderer { get; set; }
+
         private void Awake()
         {
             MeshRenderer = GetComponent<MeshRenderer>();
             Animator = GetComponent<Animator>();
-            SelectingAnimationHash = Animator.StringToHash("IsSelecting");
+            LineRenderer = GetComponent<LineRenderer>();
             ColorTypeTransform = GetComponent<Transform>();
+            ParticleSystem = GetComponent<ParticleSystem>();
+            _particleSystemRenderer = GetComponent<ParticleSystemRenderer>();
+            SelectingAnimationHash = Animator.StringToHash("IsSelecting");
+            LineRenderer.enabled = false;
         }
 
         private void Start()
         {
+            
             _colorPresenter.SetType(_colorType);
         }
 
         public void SetColor(int type)
         {
             SetMaterial((ColorType)type);
+            _particleSystemRenderer.material = MeshRenderer.material;
         }
 
         public void Select()

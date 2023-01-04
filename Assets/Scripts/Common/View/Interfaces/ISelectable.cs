@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Common.View
 {
@@ -8,6 +9,8 @@ namespace Common.View
         Transform ColorTypeTransform { get; set; }
         void Select();
 
+        event Action<ISelectable> OnMouseDownAsButton;
+        
         int SelectingAnimationHash { get; set; }
         
         Animator Animator { get; set; }

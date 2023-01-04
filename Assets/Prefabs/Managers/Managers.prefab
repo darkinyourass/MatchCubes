@@ -61,7 +61,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1350676123
 Transform:
   m_ObjectHideFlags: 0
@@ -89,9 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cee8b782e144799a154ec729cdfc491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _height: 2
-  _width: 2
-  _depth: 2
+  _height: 8
+  _width: 8
+  _depth: 8
   _cubePrefab: {fileID: 6108374576013174377, guid: b6dc88e7478567443a626367258b06f1,
     type: 3}
   <GridType>k__BackingField: 2

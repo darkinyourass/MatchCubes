@@ -1,4 +1,5 @@
-﻿using Common.Presenter;
+﻿using System;
+using Common.Presenter;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -14,17 +15,12 @@ namespace Common.View
 
         private TouchMovement _touchMovement;
 
-        [SerializeField] private float _maxValue;
         [SerializeField] private float _currentValue;
         
         private Image _fillImage;
         private TMP_Text _textValue;
         
         public float MaxValue { get; set; }
-        
-        private float CurrentValue { get => _currentValue;
-            set => _currentValue = Mathf.Clamp(value, 0, _maxValue);
-        }
         
         [Inject]
         private void Constructor(TouchMovement touchMovement)
@@ -36,13 +32,22 @@ namespace Common.View
         {
             _textValue = GetComponentInChildren<TMP_Text>();
             _fillImage = GetComponent<Image>();
-            // _touchMovement.OnMatchCubesToProgressBar += AddCurrentValue;
+            
+        }
+
+        private void OnEnable()
+        {
+            _touchMovement.OnMakeMove += AddCurrentValue;
+        }
+
+        private void OnDisable()
+        {
+            _touchMovement.OnMakeMove -= AddCurrentValue;
         }
 
         private void Start()
         {
-            _progressBarPresenter.SetMaxValue(_maxValue);
-            _progressBarPresenter.SetCurrentValue(CurrentValue);
+            _progressBarPresenter.SetCurrentValue(_currentValue);
             
             var reactiveProperty = _progressBarPresenter.CurrentValue;
             reactiveProperty.Subscribe(SetValue).AddTo(this);
@@ -50,23 +55,17 @@ namespace Common.View
 
         private void Update()
         {
-            _progressBarPresenter.SetCurrentValue(CurrentValue);
-            UpdateFillValue();
+            _progressBarPresenter.SetCurrentValue(_currentValue);
         }
 
         private void AddCurrentValue()
         {
-            CurrentValue += 1; 
-        }
-
-        private void UpdateFillValue()
-        {
-            _fillImage.fillAmount = CurrentValue / _maxValue;
+            _currentValue += 1; 
         }
 
         private void SetValue(float value)
         {
-            _textValue.text = value + " / " + _maxValue;
+            _textValue.text = $"Moves {value}";
         }
     }
 }

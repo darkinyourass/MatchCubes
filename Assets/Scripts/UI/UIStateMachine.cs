@@ -1,4 +1,5 @@
-﻿using Common.View;
+﻿using System.Collections;
+using Common.View;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -108,8 +109,15 @@ namespace UI
 
         private void OnLevelEnd()
         {
-            IsLevelWon = true;
+            StartCoroutine(SetGridFalseCo());
+        }
+
+
+        private IEnumerator SetGridFalseCo()
+        {
+            yield return new WaitForSeconds(2f);
             Grid.gameObject.SetActive(false);
+            IsLevelWon = true;
         }
 
         private void OnLevelChose()

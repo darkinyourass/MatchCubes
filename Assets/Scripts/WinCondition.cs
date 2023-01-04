@@ -74,11 +74,13 @@ namespace Cubes
                 case GridType.Default:
                     _emptySelectables.AddRange(selectables);
                     if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
+                    _emptySelectables.RemoveRange(0, _emptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.DefaultTimer:
                     _emptySelectables.AddRange(selectables);
                     if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
+                    _emptySelectables.RemoveRange(0, _emptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.EndlessTimer:
@@ -88,10 +90,10 @@ namespace Cubes
                     _testGrid.gameObject.SetActive(false);
                     _stateMachine.TimeValue += 20;
                     _stateMachine.CurrentValue += 20;
-                    StartCoroutine(RecreateGridCo());
                     _testGrid.ReCreateGrid();
                     while (_counter < 3)
                     {
+                        StartCoroutine(RecreateGridCo());
                         return;
                     }
                     OnAllCubesMatched?.Invoke();

@@ -1,5 +1,7 @@
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -8,11 +10,21 @@ public class CameraMovement : MonoBehaviour
     private Camera _camera;
     private Touch _touch;
 
+    private TestGrid _testGrid;
+
+    [Inject]
+    private void Constructor(TestGrid testGrid)
+    {
+        _testGrid = testGrid;
+    }
+
     private Vector3 _position;
 
     private void Start()
     {
         _camera = GetComponent<Camera>();
+        _target.position = new Vector3(_testGrid.Size / 2f - 0.5f, _testGrid.Size / 2f - 0.5f,
+            _testGrid.Size / 2f - 0.5f);
         _camera.transform.position = _target.position;
         _camera.transform.Translate(new Vector3(0, 0, -_distanceToTarget));
     }

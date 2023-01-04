@@ -12,9 +12,14 @@ namespace DefaultNamespace
 {
     public class TestGrid : MonoBehaviour
     {
-        [SerializeField] private int _height;
-        [SerializeField] private int _width;
-        [SerializeField] private int _depth;
+        [SerializeField] private int _size;
+
+        public int Size
+        {
+            get => _size;
+            set => _size = value;
+        }
+
         [SerializeField] private GameObject _cubePrefab;
         
         public delegate void OnCounterValueChange(int counter);    
@@ -85,19 +90,35 @@ namespace DefaultNamespace
         
         private void CreateGrid()
         {
-            _grid = new GameObject[_width, _height, _depth];
-            var colors = GenerateColorsPref(_width * _height * _depth);
+            _grid = new GameObject[_size, _size, _size];
+            var colors = GenerateColorsPref(_size * _size * _size);
             var counter = 0;
-            for (var i = 0; i < _width; i++)
+            for (var i = 0; i < _size; i++)
             {
-                for (var j = 0; j < _height; j++)
+                for (var j = 0; j < _size; j++)
                 {
-                    for (var k = 0; k < _depth; k++)
+                    for (var k = 0; k < _size; k++)
                     {
                         _grid[i, j, k] = _diContainer.InstantiatePrefab(_cubePrefab, new Vector3(i, j, k ),
                             Quaternion.identity, transform);
-                        _grid[i, j, k].GetComponent<ISelectable>().SetColor(colors[counter]);
-                        counter++;
+                        if (_size != 2)
+                        {
+                            if ((i == _size / 2 || i == (_size / 2) - 1) && (j == _size / 2 || j == (_size / 2) - 1) &&
+                                (k == _size / 2 || k == (_size / 2) - 1))
+                            {
+                                _grid[i, j, k].GetComponent<ISelectable>().SetColor((int)ColorType.White);
+                            }
+                            else
+                            {
+                                _grid[i, j, k].GetComponent<ISelectable>().SetColor(colors[counter]);
+                                counter++;
+                            }
+                        }
+                        else
+                        {
+                            _grid[i, j, k].GetComponent<ISelectable>().SetColor(colors[counter]);
+                            counter++;
+                        }
                     }
                 }
             }

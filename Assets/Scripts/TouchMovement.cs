@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Common.View;
 using DefaultNamespace;
+using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
+using Random = UnityEngine.Random;
 
 public class TouchMovement : MonoBehaviour
 {
@@ -32,25 +35,28 @@ public class TouchMovement : MonoBehaviour
         
     private Vector3 _currentPosition;
     private Vector3 _secondPosition;
+    
+    public event Action<List<ISelectable>> OnMatchingCubes;
+
+    public event Action OnMakeMove;
+    
+    private RaycastHit[] _hits;
 
     private ColorView _cubeHit;
 
-    [SerializeField] private List<ColorView> _emptySelectablesNearCurrentSelectable = new ();
+    private readonly List<ISelectable> _emptySelectablesNearCurrentSelectable = new ();
 
     private List<ISelectable> _emptySelectables = new();
 
     private readonly List<ISelectable> _raycastSelectables = new();
     
+    public List<ISelectable> _colorViews = new ();
+
+    private readonly List<ISelectable> _anotherList = new List<ISelectable>();
+    
+    private List<ISelectable> _mergedCubes = new List<ISelectable>();
+    
     private bool IsMoving { get; set; }
-
-    public event Action<List<ISelectable>> OnMatchingCubes;
-    
-    // public event Action OnMatchCubesToProgressBar;
-    // private ColorView _colorView;
-
-    [SerializeField] public List<ColorView> _colorViews = new ();
-    
-    private RaycastHit[] _hits;
     
     public List<ISelectable> EmptySelectables { get => _emptySelectables; set => _emptySelectables = value; }
 
@@ -86,6 +92,25 @@ public class TouchMovement : MonoBehaviour
             case null when _selection.MeshRenderer.enabled:
                 _selection.Select();
                 _currentSelectable = _selection;
+                if (_currentSelectable.ColorType == ColorType.White)
+                {
+                    OnMakeMove?.Invoke();
+                    foreach (var cube in _colorViews)
+                    {
+                        cube.LineRenderer.enabled = false;
+                        if (cube.MeshRenderer.enabled)
+                        {
+                            _emptySelectables.Add(cube);
+                            _anotherList.Add(cube);
+                            cube.MeshRenderer.enabled = false;
+                            cube.ParticleSystem.Play();
+                        }
+                    }
+                    OnMatchingCubes?.Invoke(_anotherList);
+                    _anotherList.RemoveRange(0, _anotherList.Count);
+                    SetSelectablesNull();
+                    return;
+                }
                 _currentSelectable.Animator.SetBool(_currentSelectable.SelectingAnimationHash , true);
                 _currentPosition = _currentSelectable.ColorTypeTransform.position;
                 SetEmptyCubes();
@@ -118,6 +143,7 @@ public class TouchMovement : MonoBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
+        OnMakeMove?.Invoke();
         _currentSelectable.ColorTypeTransform.position = secondPosition;
         IsMoving = false;
         SetSelectablesNull();
@@ -132,10 +158,16 @@ public class TouchMovement : MonoBehaviour
 
     private void SetEmptyCubes()
     {
-        foreach (var colorView in _colorViews.Where
-                 (colorView => Vector3.Distance(_currentPosition, colorView.ColorTypeTransform.position) <= 1f))
+        foreach (var colorView in _colorViews)
         {
-            _emptySelectablesNearCurrentSelectable.Add(colorView);
+            var heading = colorView.ColorTypeTransform.position - _currentPosition;
+            var distance = heading.magnitude;
+            var direction = heading / distance;
+            if (direction.x == 1 || direction.y == 1 || direction.z == 1
+                || direction.x == -1 || direction.y == -1 || direction.z == -1)
+            {
+                _emptySelectablesNearCurrentSelectable.Add(colorView);
+            }
         }
     }
 
@@ -153,14 +185,91 @@ public class TouchMovement : MonoBehaviour
         }
         else if (_currentSelectable == null)
         {
-            foreach (var emptySelectable in _emptySelectables)
+            foreach (var emptySelectable in _emptySelectables.Where(emptySelectable => emptySelectable.ColorTypeTransform != null))
             {
-                if (emptySelectable.ColorTypeTransform != null)
-                {
-                    emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
-                }
+                emptySelectable.ColorTypeTransform.gameObject.layer = _ignoreLayerMask;
             }
         }
+    }
+
+    private void CheckForMatchingSelectablesCount()
+    {
+        switch (_raycastSelectables.Count)
+        {
+            case 2:
+                CoinsHolder.CoinsAmount += 2;
+                break;
+            case 3:
+                CoinsHolder.CoinsAmount += 4;
+                break;
+            case 4:
+                CoinsHolder.CoinsAmount += 8;
+                FindAndMergeCubes(5);
+                break;
+            case 5:
+                CoinsHolder.CoinsAmount += 12;
+                FindAndMergeCubes(8);
+                break;
+            case 6:
+                CoinsHolder.CoinsAmount += 20;
+                FindAndMergeCubes(10);
+                break;
+        }
+    }
+    
+    private void FindAndMergeCubes(int pairs)
+    {
+        _colorViews = _colorViews.OrderBy(x => Random.value).ToList();
+        var distinctColors = _colorViews.Select(x => x.ColorType).ToList();
+
+        for (int i = 0; i < pairs; i++)
+        {
+            var color = distinctColors[Random.Range(0, distinctColors.Count)];
+            
+            var cubesWithColor = _colorViews.Where(x =>
+                x.ColorType == color && x.MeshRenderer.enabled && x.ColorType != ColorType.White &&
+                !_raycastSelectables.Contains(x)).ToList();
+
+            if (color == ColorType.White)
+            {
+                i--;
+                continue;
+            }
+            if (cubesWithColor.Count >= 2) 
+            {
+                Debug.Log(cubesWithColor[0].ColorType);
+                Debug.Log(cubesWithColor[1].ColorType);
+                MergeCubes(cubesWithColor[0], cubesWithColor[1]);
+            }
+        }
+    }
+
+    private void MergeCubes(ISelectable cube1, ISelectable cube2)
+    {
+        // cube1.ColorTypeTransform.gameObject.SetActive(false);
+        // cube2.ColorTypeTransform.gameObject.SetActive(false);
+        
+        _mergedCubes.Add(cube1);
+        _mergedCubes.Add(cube2);
+        
+        OnMatchingCubes?.Invoke(_mergedCubes);
+        
+        cube1.MeshRenderer.enabled = false;
+        cube2.MeshRenderer.enabled = false;
+        
+        cube1.ParticleSystem.Play();
+        cube2.ParticleSystem.Play();
+        
+        _emptySelectables.AddRange(_mergedCubes);
+        
+        cube1.ParticleSystem.Play();
+        cube2.ParticleSystem.Play();
+        
+        cube1.LineRenderer.enabled = true;
+        cube2.LineRenderer.enabled = true;
+        
+        Debug.Log(_emptySelectables.Count);
+        _mergedCubes.RemoveRange(0, _mergedCubes.Count);
     }
 
     private void CheckSelectablesBetweenCurrentAndSecond()
@@ -168,33 +277,36 @@ public class TouchMovement : MonoBehaviour
         var heading = _secondPosition - _currentPosition;
         var distance = heading.magnitude;
         var direction = heading / distance;
-        // if (direction.x % 1 != 0 || direction.y % 1 != 0 || direction.z % 1 != 0)
-        // {
-        //     AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
-        //     SetSelectablesNull();
-        //     return;
-        // }
-        var allCubes = Physics.RaycastAll(_currentPosition, direction, Vector3.Distance(_currentPosition, _secondPosition),
+
+        var allCubes = Physics.RaycastAll(_currentPosition, direction,
+            Vector3.Distance(_currentPosition, _secondPosition),
             _layerMask);
         
-        _raycastSelectables.Add(_currentSelectable);
+        if (direction.x != 1 && direction.y != 1 && direction.z != 1 && direction.x != -1 && direction.y != -1 && direction.z != -1)
+        {
+            AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
+            SetSelectablesNull();
+            return;
+        }
+
         foreach (var cube in allCubes)
         {
             _cubeHit = cube.collider.GetComponent<ColorView>();
             _raycastSelectables.Add(_cubeHit);
         }
+        _raycastSelectables.Add(_currentSelectable);
 
         foreach (var selectable in _raycastSelectables)
         {
-            if ((selectable.ColorType != _currentSelectable.ColorType && selectable.MeshRenderer.enabled) ||
-                _raycastSelectables.Count % 2 != 0)
+            if (selectable.ColorType != _currentSelectable.ColorType && selectable.MeshRenderer.enabled)
             {
                 AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
             }
 
-            if (selectable.ColorType == _currentSelectable.ColorType && selectable.MeshRenderer.enabled &&
-                _raycastSelectables.Count % 2 == 0) continue;
+            if (selectable.ColorType == _currentSelectable.ColorType && selectable.MeshRenderer.enabled) continue;
+            
             _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);  
+            
             if (!IsMoving)
             {
                 SetSelectablesNull();
@@ -206,20 +318,40 @@ public class TouchMovement : MonoBehaviour
         {
             selectable.MeshRenderer.enabled = false;
         }
+        EmptySelectables.AddRange(_raycastSelectables);
         OnMatchingCubes?.Invoke(_raycastSelectables);
         AudioManager.Instance.PlayAudioClip(_matchAudioClip);
+        OnMakeMove?.Invoke();
         _currentSelectable.MeshRenderer.enabled = false;
         _currentSelectable.ColorTypeTransform.position = _currentPosition;  
-        _emptySelectables.Add(_currentSelectable);
-        _emptySelectables.AddRange(_raycastSelectables);
+        
+        foreach (var selectable in _raycastSelectables)
+        {
+            selectable.ParticleSystem.Play();
+            selectable.LineRenderer.enabled = true;
+        }
+        
+        _currentSelectable.ParticleSystem.Play();
+        _currentSelectable.LineRenderer.enabled = true;
+        CheckForMatchingSelectablesCount();
         SetSelectablesNull();
         _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);
     }
 
     private void MoveCubeToEmptyPosition()
     {
-        if (!(Vector3.Distance(_currentPosition, _secondPosition) <= 1f)) return;
+        var heading = _secondPosition - _currentPosition;
+        var distance = heading.magnitude;
+        var direction = heading / distance;
         if (_secondSelectable.MeshRenderer.enabled) return;
+        if (direction.x != 1 && direction.y != 1 && direction.z != 1 && direction.x != -1 && direction.y != -1 && direction.z != -1)
+        {
+            AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
+            SetSelectablesNull();
+            return;
+        }
+        // if (!(Vector3.Distance(_currentPosition, _secondPosition) <= 1f)) return;
+        // if (_secondSelectable.MeshRenderer.enabled) return;
         StartCoroutine(MoveCubeCo(_secondPosition));
         _secondSelectable.ColorTypeTransform.position = _currentPosition;
         _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;

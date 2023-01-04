@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 564370944}
-  _distanceToTarget: 17
+  _distanceToTarget: 15
 --- !u!1001 &1515555565061283259
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -520,6 +520,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1515555565658378448, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: <TimeValue>k__BackingField
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 1515555565658378449, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
       propertyPath: m_RootOrder
@@ -670,6 +675,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _depth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _width
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: <GridType>k__BackingField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7056511328606504536, guid: 33e2899cf443c9e488eb38b83239a12d,
         type: 3}
       propertyPath: m_Name
