@@ -4,12 +4,10 @@ namespace Common.Presenter
 {
     public interface IProgressBarPresenter
     {
-        public IReadOnlyReactiveProperty<float> CurrentValue { get; }
-        public IReadOnlyReactiveProperty<float> MaxValue { get; }
+        public IReadOnlyReactiveProperty<int> CurrentValue { get; }
 
-        void SetCurrentValue(float count);
-        void SetMaxValue(float value);
-        void ResetCurrentValue(out float value);
+        void SetCurrentValue(int count);
+        void ResetCurrentValue(out int value);
 
     }
 }

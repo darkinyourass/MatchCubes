@@ -10,24 +10,14 @@
             _model = new ProgressBarModel();
         }
 
-        public void SetCurrentValue(float value)
+        public void SetCurrentValue(int value)
         {
             _model.CurrentValue = value;
         }
 
-        public void SetMaxValue(float value)
-        {
-            _model.MaxValue = value;
-        }
-
-        public float GetCurrentValue()
+        public int GetCurrentValue()
         {
             return _model.CurrentValue;
-        }
-
-        public float GetMaxValue()
-        {
-            return _model.MaxValue;
         }
     }
 }

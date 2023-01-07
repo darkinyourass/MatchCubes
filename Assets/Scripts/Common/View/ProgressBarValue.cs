@@ -1,10 +1,9 @@
-﻿using System;
-using Common.Presenter;
+﻿using Common.Presenter;
 using TMPro;
 using UnityEngine;
 using Zenject;
 using UniRx;
-using UnityEngine.UI;
+
 
 namespace Common.View
 {
@@ -15,13 +14,12 @@ namespace Common.View
 
         private TouchMovement _touchMovement;
 
-        [SerializeField] private float _currentValue;
+        [SerializeField] private int _currentValue;
         
-        private Image _fillImage;
+        public int CurrentValue { get => _currentValue ; set => _currentValue = value; }
+
         private TMP_Text _textValue;
-        
-        public float MaxValue { get; set; }
-        
+
         [Inject]
         private void Constructor(TouchMovement touchMovement)
         {
@@ -31,8 +29,6 @@ namespace Common.View
         private void Awake()
         {
             _textValue = GetComponentInChildren<TMP_Text>();
-            _fillImage = GetComponent<Image>();
-            
         }
 
         private void OnEnable()
@@ -48,7 +44,6 @@ namespace Common.View
         private void Start()
         {
             _progressBarPresenter.SetCurrentValue(_currentValue);
-            
             var reactiveProperty = _progressBarPresenter.CurrentValue;
             reactiveProperty.Subscribe(SetValue).AddTo(this);
         }
@@ -63,7 +58,13 @@ namespace Common.View
             _currentValue += 1; 
         }
 
-        private void SetValue(float value)
+        public void ResetProgressValue()
+        {
+            _currentValue = 0;
+            _progressBarPresenter.ResetCurrentValue(out _currentValue);
+        }
+
+        private void SetValue(int value)
         {
             _textValue.text = $"Moves {value}";
         }

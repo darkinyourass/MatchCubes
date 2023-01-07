@@ -4,7 +4,9 @@ using System.Linq;
 using Common;
 using Common.View;
 using ModestTree;
+using UI;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Zenject;
 using Random = System.Random;
 
@@ -13,6 +15,13 @@ namespace DefaultNamespace
     public class TestGrid : MonoBehaviour
     {
         [SerializeField] private int _size;
+        
+        public static bool isTutorialFinished;
+
+        public static bool isFirstClicked;
+        public static bool isSecondClicked;
+        public static bool isThirdClicked;
+        public static bool isFourthClicked;
 
         public int Size
         {
@@ -33,20 +42,34 @@ namespace DefaultNamespace
         private TouchMovement _touchMovement;
         
         [field: SerializeField]
-        private ColorView[] Cubes { get; set; }
-        [field: SerializeField] private List<ColorView> AllCubes { get; set; }
-        
+        [SerializeField] private ColorView[] Cubes { get; set; }
+        [field: SerializeField] private List<ColorView> AllCubes { get; } = new();
+
         [Inject]
         private DiContainer _diContainer;
 
         private GameObject[,,] _grid;
+
+        [SerializeField] private Tutorial _tutorial;
 
         private const int Counter = 3;
         [SerializeField] private int _counter;
 
         private void OnEnable()
         {
-            CreateGrid();
+            if (!isTutorialFinished)
+            {
+                _touchMovement.OnTutorialCubeClick += ClickFirstCube;
+                _touchMovement.OnTutorialSecondCubeClick += ClickSecondCube;
+                _touchMovement.OnTutorialThirdClick += ClickThird;
+                _touchMovement.OnTutorialFourthClick += ClickFourth;
+                CreateTutorialGrid();
+            }
+            else
+            {
+                CreateGrid();
+            }
+
             Cubes = GetComponentsInChildren<ColorView>();
             AllCubes.AddRange(Cubes);
             _touchMovement._colorViews.AddRange(Cubes);
@@ -55,6 +78,10 @@ namespace DefaultNamespace
 
         private void OnDisable()
         {
+            _touchMovement.OnTutorialCubeClick -= ClickFirstCube;
+            _touchMovement.OnTutorialSecondCubeClick -= ClickSecondCube;
+            _touchMovement.OnTutorialThirdClick -= ClickThird;
+            _touchMovement.OnTutorialFourthClick -= ClickFourth;
             foreach (var cube in AllCubes)
             {
                 Destroy(cube.gameObject);
@@ -124,9 +151,58 @@ namespace DefaultNamespace
             }
         }
 
-        public void SetGridType(GridType gridType)
+        private void CreateTutorialGrid()
         {
-            GridType = gridType;
+            _grid = new GameObject[_size, _size, _size];
+            for (var i = 0; i < _size; i++)
+            {
+                for (var j = 0; j < _size; j++)
+                {
+                    for (var k = 0; k < _size; k++)
+                    {
+                        _grid[i, j, k] = _diContainer.InstantiatePrefab(_cubePrefab, new Vector3(i, j, k ),
+                            Quaternion.identity, transform);
+                    }
+                }
+            }
+            
+            _grid[0, 0, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Red);
+            _grid[0, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Red);
+            _grid[0, 1, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Blue);
+            _tutorial.SetHandImagePosition(_grid[0, 1, 0].transform.position + new Vector3(0.6f, -0.5f, -0.7f));
+            _tutorial.SetTutorialText("TAP ON CUBE");
+            _grid[0, 1, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
+            _grid[1, 0, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
+            _grid[1, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Yellow);
+            _grid[1, 1, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Blue);
+            _grid[1, 1, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Yellow);
+        }
+        
+        private void ClickFirstCube()
+        {
+            _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
+            _tutorial.SetTutorialText("TAP TO MERGE");
+            isFirstClicked = true;
+        }
+
+        private void ClickSecondCube()
+        {
+            _tutorial.SetHandImagePosition(_grid[1, 0, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
+            _tutorial.SetTutorialText("TAP ON CUBE");
+            isSecondClicked = true;
+        }
+
+        private void ClickThird()
+        {
+            _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
+            _tutorial.SetTutorialText("TAP TO MOVE");
+            isThirdClicked = true;
+        }
+
+        private void ClickFourth()
+        {
+            isFourthClicked = true;
+            _tutorial.gameObject.SetActive(false);
         }
     }
 }

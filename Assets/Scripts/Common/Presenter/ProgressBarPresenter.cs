@@ -6,11 +6,9 @@ namespace Common.Presenter
 {
     public class ProgressBarPresenter : MonoBehaviour, IProgressBarPresenter
     {
-        public IReadOnlyReactiveProperty<float> CurrentValue => _currentValue;
-        private readonly ReactiveProperty<float> _currentValue = new ReactiveProperty<float>();
-        
-        public IReadOnlyReactiveProperty<float> MaxValue => _maxValue;
-        private readonly ReactiveProperty<float> _maxValue = new ReactiveProperty<float>();
+        public IReadOnlyReactiveProperty<int> CurrentValue => _currentValue;
+        private readonly ReactiveProperty<int> _currentValue = new ReactiveProperty<int>();
+
 
         private IProgressBarUsecase _progressBarUsecase;
 
@@ -24,13 +22,6 @@ namespace Common.Presenter
                UpdateCurrentValue(progressBarModel); 
             });
             UpdateCurrentValue(_progressBarUsecase.CurrentValue.Value);
-            
-            var disposableMaxValue = _progressBarUsecase.MaxValue.Subscribe((progressBarModel) =>
-            {
-                UpdateMaxValue(progressBarModel); 
-            });
-            UpdateMaxValue(_progressBarUsecase.MaxValue.Value);
-            
         }
 
         private void UpdateCurrentValue(ProgressBarModel progressBarModel)
@@ -38,22 +29,12 @@ namespace Common.Presenter
             _currentValue.Value = progressBarModel.CurrentValue;
         }
 
-        private void UpdateMaxValue(ProgressBarModel progressBarModel)
-        {
-            _maxValue.Value = progressBarModel.MaxValue;
-        }
-
-        public void SetCurrentValue(float count)
+        public void SetCurrentValue(int count)
         {
             _progressBarUsecase.SetCurrentValue(count);
         }
 
-        public void SetMaxValue(float value)
-        {
-            _progressBarUsecase.SetMaxValue(value);
-        }
-
-        public void ResetCurrentValue(out float value)
+        public void ResetCurrentValue(out int value)
         {
             _progressBarUsecase.ResetCurrentValue(out value);
         }

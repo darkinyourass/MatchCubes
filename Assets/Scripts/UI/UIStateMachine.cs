@@ -20,12 +20,30 @@ namespace UI
 
         private float _currentTimeValue;
 
-        [Header("Level type buttons")]
-        [SerializeField] private LevelTypeChoiceView _levelType;
+        [Header("UI elements")]
+        [SerializeField] private LevelTypeChoiceView _playButton;
+        [SerializeField] private PopUpTextView _popUpTextView;
+        [SerializeField] private Stars _stars;
+        [SerializeField] private ProgressBarValue _progressBarValue;
 
+        [Header("Stars values")] 
+        [SerializeField] private int _oneStarValue;
+        [SerializeField] private int _twoStarValue;
+        [SerializeField] private int _threeStarValue;
+
+        
+        [field: Header("Level value")]
+        [field: SerializeField]
+        public static int LevelNumber { get; private set; }
+        
+        [field: Header("Set time value")]
+        [field: SerializeField] 
+        public float TimeValue { get; set; }
+        
+        public PopUpTextView PopTextView => _popUpTextView;
+        
         public Timer Timer { get; private set; }
 
-        [field: SerializeField] public float TimeValue { get; set; }
         public float CurrentValue
         {
             get => _currentTimeValue; 
@@ -33,9 +51,10 @@ namespace UI
         }
 
         private TestGrid Grid { get; set; }
-        
 
         private WinCondition _winCondition;
+
+        private GetCoinsButton _getCoinsButton;
 
         public bool IsResumeButtonPressed { get; set; }
         
@@ -63,10 +82,11 @@ namespace UI
         private UIStateFactory StateFactory { get; set; }
 
         [Inject]
-        private void Constructor(Timer timer, TestGrid grid)
+        private void Constructor(Timer timer, TestGrid grid, GetCoinsButton coinsButton)
         {
             Timer = timer;
             Grid = grid;
+            _getCoinsButton = coinsButton;
         }
 
         private void Awake()
@@ -76,8 +96,7 @@ namespace UI
             StateFactory = new UIStateFactory(this);
             CurrentState = StateFactory.Menu();
             CurrentState.EnterState();
-            _levelType.OnLevelTypeButtonClicked += OnLevelChose;
-            
+            _playButton.OnLevelTypeButtonClicked += OnLevelChose;
         }
 
         private void Update()
@@ -100,6 +119,7 @@ namespace UI
                 IsLevelLost = true;
                 Timer.IsTimerSet = false;
                 Grid.gameObject.SetActive(false);
+                _progressBarValue.ResetProgressValue();
             }
             else
             {
@@ -110,20 +130,24 @@ namespace UI
         private void OnLevelEnd()
         {
             StartCoroutine(SetGridFalseCo());
+            TestGrid.isTutorialFinished = true;
         }
 
 
         private IEnumerator SetGridFalseCo()
         {
             yield return new WaitForSeconds(2f);
+            _stars.SetStars(_progressBarValue.CurrentValue, _oneStarValue, _twoStarValue, _threeStarValue);
             Grid.gameObject.SetActive(false);
             IsLevelWon = true;
+            _progressBarValue.ResetProgressValue();
         }
 
         private void OnLevelChose()
         {
             CurrentValue = TimeValue;
             IsLevelSelected = true;
+            _stars.ResetStars();
         }
 
         public void OnCancelButtonClick()
@@ -142,14 +166,27 @@ namespace UI
             IsSettingsButtonPressed = true;
         }
 
-        public void OnNextLevelButtonClick(int sceneID)
+        public void OnNextLevelButtonClick()
         {
-            SceneManager.LoadScene(sceneID);
+            if (LevelNumber >= 5)
+            {
+                SceneManager.LoadScene(Random.Range(1, 6));
+                LevelNumber += 1;
+                _getCoinsButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                SceneManager.LoadScene(LevelNumber + 1);
+                LevelNumber += 1;
+                _getCoinsButton.gameObject.SetActive(true);
+            }
+            
         }
 
         public void OnGetCoinsButtonClick()
         {
-            CoinsHolder.CoinsAmount += 100;
+            _getCoinsButton.gameObject.SetActive(false);
+            CoinsHolder.CoinsAmount += 25;
         }
         
         public void RestartLevel()

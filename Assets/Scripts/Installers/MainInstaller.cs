@@ -13,6 +13,7 @@ public class MainInstaller : MonoInstaller
     [SerializeField] private TestGrid _testGrid;
     [SerializeField] private Timer _timer;
     [SerializeField] private UIStateMachine _uiStateMachine;
+    [SerializeField] private GetCoinsButton _getCoinsButton;
 
     public override void InstallBindings()
     {
@@ -61,5 +62,6 @@ public class MainInstaller : MonoInstaller
     private void BindUI()
     {
         Container.Bind<UIStateMachine>().FromInstance(_uiStateMachine).AsSingle().NonLazy();
+        Container.Bind<GetCoinsButton>().FromInstance(_getCoinsButton).AsTransient().NonLazy();
     }
 }

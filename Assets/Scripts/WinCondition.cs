@@ -16,12 +16,13 @@ namespace Cubes
         public event Action OnAllCubesMatched;
         
         private TouchMovement _touchMovement;
-
-        [SerializeField] private int _counter;
+        
+        private UIStateMachine _stateMachine;
         
         private TestGrid _testGrid;
 
-        private UIStateMachine _stateMachine;
+        private int _counter;
+
 
         [Inject]
         private void Constructor(TestGrid testGrid)
@@ -46,15 +47,6 @@ namespace Cubes
             _touchMovement.OnMatchingCubes += AddToList;
             _testGrid.CounterValueChange += ChangeCounter;
         }
-
-        // private void AddToList(ISelectable first, ISelectable second)
-        // {
-        //     _colorViews.Add((ColorView)first);
-        //     _colorViews.Add((ColorView)second);
-        //     if (_colorViews.Count != _touchMovement._colorViews.Count) return;
-        //     OnAllCubesMatched?.Invoke();
-        //     _touchMovement.EmptySelectables.RemoveRange(0, _touchMovement.EmptySelectables.Count);
-        // }
 
         private void ChangeCounter(int counter)
         {
