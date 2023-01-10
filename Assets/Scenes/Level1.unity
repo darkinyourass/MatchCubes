@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: a88aa06adb18b0e4aad93bec12045507, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.48999643, g: 0.38007167, b: 0.44563192, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -415,6 +415,7 @@ MonoBehaviour:
   _timer: {fileID: 544176782}
   _uiStateMachine: {fileID: 1515555565061283260}
   _getCoinsButton: {fileID: 1515555565061283261}
+  _coinsHolder: {fileID: 1126912088}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +515,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 564370944}
   _distanceToTarget: 15
+--- !u!114 &1126912088 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1126912088, guid: c80e8a27191be4049a23daca4de9f01e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1515555565061283259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de201899e21d3a141b7b2f6287064e3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1515555565061283259
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -683,50 +696,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1350676123, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676123, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676123, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676123, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676123, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _depth
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _width
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _height
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _tutorial
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: <GridType>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7056511328606504536, guid: 33e2899cf443c9e488eb38b83239a12d,
         type: 3}
       propertyPath: m_Name

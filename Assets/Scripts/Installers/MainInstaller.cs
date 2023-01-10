@@ -14,6 +14,7 @@ public class MainInstaller : MonoInstaller
     [SerializeField] private Timer _timer;
     [SerializeField] private UIStateMachine _uiStateMachine;
     [SerializeField] private GetCoinsButton _getCoinsButton;
+    [SerializeField] private CoinsHolder _coinsHolder;
 
     public override void InstallBindings()
     {
@@ -63,5 +64,6 @@ public class MainInstaller : MonoInstaller
     {
         Container.Bind<UIStateMachine>().FromInstance(_uiStateMachine).AsSingle().NonLazy();
         Container.Bind<GetCoinsButton>().FromInstance(_getCoinsButton).AsTransient().NonLazy();
+        Container.Bind<CoinsHolder>().FromInstance(_coinsHolder).AsSingle().NonLazy();
     }
 }

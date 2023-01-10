@@ -10,7 +10,7 @@ namespace UI
         private TMP_Text _levelNumberText;
         
         private UIStateMachine _stateMachine;
-
+        
         [Inject]
         private void Constructor(UIStateMachine uiStateMachine)
         {
@@ -20,15 +20,11 @@ namespace UI
         private void OnEnable()
         {
             _levelNumberText = GetComponentInChildren<TMP_Text>();
-            if (UIStateMachine.LevelNumber == 0)
-            {
-                _levelNumberText.text = "";
-            }
-            else
-            {
-                _levelNumberText.text = $"Level {UIStateMachine.LevelNumber}";
-            }
-            
+        }
+
+        private void Update()
+        {
+            _levelNumberText.text = _stateMachine.LevelNumber == 0 ? "" : $"Level {_stateMachine.LevelNumber}";
         }
     }
 }

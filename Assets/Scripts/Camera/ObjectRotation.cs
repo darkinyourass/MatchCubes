@@ -8,7 +8,7 @@ namespace Game.Camera
         private bool _isRotating;
         private Touch _touch;
 
-        private void Update()
+        private void LateUpdate()
         {
              MoveWithMouse();
              MoveWithTouch();
@@ -26,15 +26,13 @@ namespace Game.Camera
                 _isRotating = false;
             }
 
-            if (_isRotating)
-            {
-                var currentMousePosition = Input.mousePosition;
-                var delta = currentMousePosition - _lastMousePosition;
-                _lastMousePosition = currentMousePosition;
+            if (!_isRotating) return;
+            var currentMousePosition = Input.mousePosition;
+            var delta = currentMousePosition - _lastMousePosition;
+            _lastMousePosition = currentMousePosition;
 
-                transform.Rotate(Vector3.up, delta.x);
-                transform.Rotate(Vector3.right, -delta.y, Space.World);
-            }
+            transform.Rotate(Vector3.up, delta.x);
+            transform.Rotate(Vector3.right, -delta.y, Space.World);
         }
 
         private void MoveWithTouch()

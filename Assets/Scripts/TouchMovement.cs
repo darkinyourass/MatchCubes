@@ -13,12 +13,12 @@ using Random = UnityEngine.Random;
 
 public class TouchMovement : MonoBehaviour
 {
-    [Inject]
     private TestGrid _testGrid;
 
-    [Inject]
     private UIStateMachine _uiStateMachine;
-    
+
+    private CoinsHolder _coinsHolder;
+
     [SerializeField] private float _movementDuration;
     
     [Header("Audio")]
@@ -66,6 +66,14 @@ public class TouchMovement : MonoBehaviour
     private bool IsMoving { get; set; }
     
     public List<ISelectable> EmptySelectables { get => _emptySelectables; set => _emptySelectables = value; }
+    
+    [Inject]
+    private void Constructor(TestGrid testGrid, UIStateMachine stateMachine, CoinsHolder coinsHolder)
+    {
+        _testGrid = testGrid;
+        _uiStateMachine = stateMachine;
+        _coinsHolder = coinsHolder;
+    }
 
     private void Start()
     {
@@ -127,12 +135,12 @@ public class TouchMovement : MonoBehaviour
                 _currentSelectable.Animator.SetBool(_currentSelectable.SelectingAnimationHash , true);
                 _currentPosition = _currentSelectable.ColorTypeTransform.position;
                 SetEmptyCubes();
-                switch (TestGrid.isTutorialFinished)
+                switch (_testGrid.isTutorialFinished)
                 {
-                    case false when !TestGrid.isFirstClicked && _currentSelectable.ColorTypeTransform.position == new Vector3(0, 1, 0):
+                    case false when !TestGrid.IsFirstClicked && _currentSelectable.ColorTypeTransform.position == new Vector3(0, 1, 0):
                         OnTutorialCubeClick?.Invoke();
                         break;
-                    case false when !TestGrid.isThirdClicked && _currentSelectable.ColorTypeTransform.position == new Vector3(1, 0, 0):
+                    case false when !TestGrid.IsThirdClicked && _currentSelectable.ColorTypeTransform.position == new Vector3(1, 0, 0):
                         OnTutorialThirdClick?.Invoke();
                         break;
                 }
@@ -146,12 +154,12 @@ public class TouchMovement : MonoBehaviour
                 _currentSelectable.SetMaterial(_currentSelectable.ColorType);
                 _secondSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;
                 _secondPosition = _secondSelectable.ColorTypeTransform.position;
-                switch (TestGrid.isTutorialFinished)
+                switch (_testGrid.isTutorialFinished)
                 {
-                    case false when !TestGrid.isSecondClicked && _secondSelectable.ColorTypeTransform.position == new Vector3(1, 1, 0):
+                    case false when !TestGrid.IsSecondClicked && _secondSelectable.ColorTypeTransform.position == new Vector3(1, 1, 0):
                         OnTutorialSecondCubeClick?.Invoke();
                         break;
-                    case false when !TestGrid.isFourthClicked && _secondSelectable.ColorTypeTransform.position == new Vector3(1, 1, 0):
+                    case false when !TestGrid.IsFourthClicked && _secondSelectable.ColorTypeTransform.position == new Vector3(1, 1, 0):
                         OnTutorialFourthClick?.Invoke();
                         break;
                 }
@@ -229,29 +237,29 @@ public class TouchMovement : MonoBehaviour
         switch (_raycastSelectables.Count)
         {
             case 2:
-                CoinsHolder.CoinsAmount += 2;
+                _coinsHolder.UpdateValue(2);
                 _uiStateMachine.PopTextView.gameObject.SetActive(true);
                 _uiStateMachine.PopTextView.SetTextValue("NICE");
                 break;
             case 3:
-                CoinsHolder.CoinsAmount += 4;
+                _coinsHolder.UpdateValue(4);
                 _uiStateMachine.PopTextView.gameObject.SetActive(true);
                 _uiStateMachine.PopTextView.SetTextValue("COOL");
                 break;
             case 4:
-                CoinsHolder.CoinsAmount += 8;
+                _coinsHolder.UpdateValue(8);
                 _uiStateMachine.PopTextView.gameObject.SetActive(true);
                 _uiStateMachine.PopTextView.SetTextValue("RADICAL");
                 FindAndMergeCubes(1);
                 break;
             case 5:
-                CoinsHolder.CoinsAmount += 12;
+                _coinsHolder.UpdateValue(12);
                 _uiStateMachine.PopTextView.gameObject.SetActive(true);
                 _uiStateMachine.PopTextView.SetTextValue("AWESOME");
                 FindAndMergeCubes(3);
                 break;
             case 6:
-                CoinsHolder.CoinsAmount += 20;
+                _coinsHolder.UpdateValue(20);
                 _uiStateMachine.PopTextView.gameObject.SetActive(true);
                 _uiStateMachine.PopTextView.SetTextValue("PERFECT");
                 FindAndMergeCubes(5);
@@ -386,8 +394,6 @@ public class TouchMovement : MonoBehaviour
             SetSelectablesNull();
             return;
         }
-        // if (!(Vector3.Distance(_currentPosition, _secondPosition) <= 1f)) return;
-        // if (_secondSelectable.MeshRenderer.enabled) return;
         StartCoroutine(MoveCubeCo(_secondPosition));
         _secondSelectable.ColorTypeTransform.position = _currentPosition;
         _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;

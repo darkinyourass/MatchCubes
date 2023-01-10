@@ -42,42 +42,10 @@ public class CameraMovement : MonoBehaviour
         // }
 
         Debug.Log(_camera.gameObject.transform.rotation.z);
-        // var sensitivityX = 6f;
-        // var sensitivityY = 6f;
-        //
-        // if (Input.GetMouseButton(1))
-        // {
-        //     _currentX += Input.GetAxis("Mouse X") * sensitivityX;
-        //     _currentY += Input.GetAxis("Mouse Y") * sensitivityY;
-        // }
+       
         // MoveCamera();
         // MoveCameraWithMouse();
         // RotateCamera();
-    }
-
-    private void RotateCamera()
-    {
-        if (Input.GetMouseButton(1))
-        {
-            // Get the cursor position in screen space
-            Vector3 cursorPos = Input.mousePosition;
-
-            // Convert the cursor position to world space
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(cursorPos);
-
-            // Calculate the direction vector from the object to the cursor
-            Vector3 direction = worldPos - _target.position;
-
-            // Calculate the rotation from the object's forward direction to the direction vector
-            Quaternion rotation = Quaternion.LookRotation(direction);
-
-            // Calculate the camera's position based on the desired distance and rotation
-            Vector3 position = _target.position + rotation * Vector3.forward * _distanceToTarget;
-
-            // Apply the rotation and position to the camera's transform
-            transform.rotation = rotation;
-            transform.position = position;
-        }
     }
 
     private void MoveCamera()

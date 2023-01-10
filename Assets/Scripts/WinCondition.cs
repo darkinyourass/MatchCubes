@@ -82,14 +82,14 @@ namespace Cubes
                     _testGrid.gameObject.SetActive(false);
                     _stateMachine.TimeValue += 20;
                     _stateMachine.CurrentValue += 20;
-                    _testGrid.ReCreateGrid();
+                    _testGrid.ResetCounter();
                     while (_counter < 3)
                     {
                         StartCoroutine(RecreateGridCo());
                         return;
                     }
                     OnAllCubesMatched?.Invoke();
-                    _testGrid.ReCreateGrid();
+                    _testGrid.ResetCounter();
                     break;
                 
             }

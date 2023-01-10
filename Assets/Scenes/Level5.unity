@@ -415,6 +415,7 @@ MonoBehaviour:
   _timer: {fileID: 544176782}
   _uiStateMachine: {fileID: 1515555565061283260}
   _getCoinsButton: {fileID: 1515555565061283262}
+  _coinsHolder: {fileID: 1515555565061283263}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +666,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c7931c5ca7d4716a254ccc92eab5f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1515555565061283263 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1126912088, guid: c80e8a27191be4049a23daca4de9f01e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1515555565061283259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de201899e21d3a141b7b2f6287064e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &3306174581607247935

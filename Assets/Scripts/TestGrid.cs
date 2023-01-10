@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Common.View;
-using ModestTree;
 using UI;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Zenject;
 using Random = System.Random;
 
@@ -14,49 +13,47 @@ namespace DefaultNamespace
 {
     public class TestGrid : MonoBehaviour
     {
-        [SerializeField] private int _size;
+        [Inject] private TouchMovement _touchMovement;
         
-        public static bool isTutorialFinished;
-
-        public static bool isFirstClicked;
-        public static bool isSecondClicked;
-        public static bool isThirdClicked;
-        public static bool isFourthClicked;
-
-        public int Size
-        {
-            get => _size;
-            set => _size = value;
-        }
-
+        [Inject] private DiContainer _diContainer;
+        
+        [Header("Size")]
+        [SerializeField] private int _size;
         [SerializeField] private GameObject _cubePrefab;
         
+        public bool isTutorialFinished;
+
+        public static bool IsFirstClicked;
+        public static bool IsSecondClicked;
+        public static bool IsThirdClicked;
+        public static bool IsFourthClicked;
+
         public delegate void OnCounterValueChange(int counter);    
         public OnCounterValueChange CounterValueChange;
-        
-        [field: SerializeField] public GridType GridType { get; private set; }
-
         public event Action OnGameStarted;
-
-        [Inject]
-        private TouchMovement _touchMovement;
         
-        [field: SerializeField]
-        [SerializeField] private ColorView[] Cubes { get; set; }
-        [field: SerializeField] private List<ColorView> AllCubes { get; } = new();
+        [field: Header("Set level type")]
+        [field: SerializeField] public GridType GridType { get; set; }
 
-        [Inject]
-        private DiContainer _diContainer;
+        [field: Header("All cubes")]
+        [field: SerializeField] private ColorView[] Cubes { get; set; }
+        [field: SerializeField] private List<ColorView> AllCubes { get; } = new();
+        
+        public int Size => _size;
 
         private GameObject[,,] _grid;
 
         [SerializeField] private Tutorial _tutorial;
+        
+        [Header("Counter for endless level")]
+        [SerializeField] private int _counter;
 
         private const int Counter = 3;
-        [SerializeField] private int _counter;
 
         private void OnEnable()
         {
+            int boolValue = PlayerPrefs.GetInt("Tutorial", 0);
+            isTutorialFinished = boolValue != 0;
             if (!isTutorialFinished)
             {
                 _touchMovement.OnTutorialCubeClick += ClickFirstCube;
@@ -90,7 +87,14 @@ namespace DefaultNamespace
             _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
         }
 
-        public void ReCreateGrid()
+        public void UpdateValue(bool value)
+        {
+            isTutorialFinished = value;
+            PlayerPrefs.SetInt("Tutorial", 1);
+            PlayerPrefs.Save();
+        }
+
+        public void ResetCounter()
         {
             while (_counter < Counter)
             {
@@ -182,26 +186,26 @@ namespace DefaultNamespace
         {
             _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
             _tutorial.SetTutorialText("TAP TO MERGE");
-            isFirstClicked = true;
+            IsFirstClicked = true;
         }
 
         private void ClickSecondCube()
         {
             _tutorial.SetHandImagePosition(_grid[1, 0, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
             _tutorial.SetTutorialText("TAP ON CUBE");
-            isSecondClicked = true;
+            IsSecondClicked = true;
         }
 
         private void ClickThird()
         {
             _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
             _tutorial.SetTutorialText("TAP TO MOVE");
-            isThirdClicked = true;
+            IsThirdClicked = true;
         }
 
         private void ClickFourth()
         {
-            isFourthClicked = true;
+            IsFourthClicked = true;
             _tutorial.gameObject.SetActive(false);
         }
     }

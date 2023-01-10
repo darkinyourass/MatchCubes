@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 using Cubes;
+using UnityEditor;
+using Random = UnityEngine.Random;
 
 namespace UI
 {
@@ -17,8 +20,6 @@ namespace UI
         [SerializeField] private Canvas _menuCanvas;
         [SerializeField] private Canvas _loseCanvas;
         // [SerializeField] private AudioClip _audioClip;
-
-        private float _currentTimeValue;
 
         [Header("UI elements")]
         [SerializeField] private LevelTypeChoiceView _playButton;
@@ -34,27 +35,28 @@ namespace UI
         
         [field: Header("Level value")]
         [field: SerializeField]
-        public static int LevelNumber { get; private set; }
+        public int LevelNumber { get; set; }
+        private int SceneIndex { get; set; }
+        [field: SerializeField] private bool IsLoadingDone { get; set; }
         
         [field: Header("Set time value")]
         [field: SerializeField] 
         public float TimeValue { get; set; }
-        
+        private float _currentTimeValue;
+
         public PopUpTextView PopTextView => _popUpTextView;
         
         public Timer Timer { get; private set; }
 
-        public float CurrentValue
-        {
-            get => _currentTimeValue; 
-            set => _currentTimeValue = Mathf.Clamp(value, 0, TimeValue);
-        }
+        public float CurrentValue { get => _currentTimeValue; set => _currentTimeValue = Mathf.Clamp(value, 0, TimeValue); }
 
         private TestGrid Grid { get; set; }
 
         private WinCondition _winCondition;
 
         private GetCoinsButton _getCoinsButton;
+
+        private CoinsHolder _coinsHolder;
 
         public bool IsResumeButtonPressed { get; set; }
         
@@ -82,11 +84,12 @@ namespace UI
         private UIStateFactory StateFactory { get; set; }
 
         [Inject]
-        private void Constructor(Timer timer, TestGrid grid, GetCoinsButton coinsButton)
+        private void Constructor(Timer timer, TestGrid grid, GetCoinsButton coinsButton, CoinsHolder coinsHolder)
         {
             Timer = timer;
             Grid = grid;
             _getCoinsButton = coinsButton;
+            _coinsHolder = coinsHolder;
         }
 
         private void Awake()
@@ -97,6 +100,22 @@ namespace UI
             CurrentState = StateFactory.Menu();
             CurrentState.EnterState();
             _playButton.OnLevelTypeButtonClicked += OnLevelChose;
+        }
+        
+        private IEnumerator Start()
+        {
+            SceneIndex = PlayerPrefs.GetInt("SceneIndex", 0);
+            LevelNumber = PlayerPrefs.GetInt("LevelNumber", 0);
+            int boolValue = PlayerPrefs.GetInt("IsLoading", 0);
+            IsLoadingDone = boolValue != 0;
+            if (!IsLoadingDone)
+            {
+                IsLoadingDone = true;
+                PlayerPrefs.SetInt("IsLoading", 1);
+                PlayerPrefs.Save(); 
+                SceneManager.LoadScene(SceneIndex);
+            }
+            yield return null;
         }
 
         private void Update()
@@ -130,9 +149,8 @@ namespace UI
         private void OnLevelEnd()
         {
             StartCoroutine(SetGridFalseCo());
-            TestGrid.isTutorialFinished = true;
+            Grid.UpdateValue(true);
         }
-
 
         private IEnumerator SetGridFalseCo()
         {
@@ -148,6 +166,34 @@ namespace UI
             CurrentValue = TimeValue;
             IsLevelSelected = true;
             _stars.ResetStars();
+        }
+
+        private void OnApplicationQuit()
+        {
+            var currentScene = SceneManager.GetActiveScene().buildIndex;
+            UpdateSceneValue(currentScene);
+            SceneIndex = currentScene;
+            PlayerPrefs.SetInt("IsLoading", 0);
+            PlayerPrefs.SetInt("SceneIndex", SceneIndex);
+            PlayerPrefs.Save();
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            switch (pauseStatus)
+            {
+                case true:
+                    var currentScene = SceneManager.GetActiveScene().buildIndex;
+                    UpdateSceneValue(currentScene);
+                    SceneIndex = currentScene;
+                    PlayerPrefs.SetInt("IsLoading", 0);
+                    PlayerPrefs.SetInt("SceneIndex", SceneIndex);
+                    PlayerPrefs.Save();
+                    break;
+                case false:
+                    SceneIndex = PlayerPrefs.GetInt("SceneIndex", 0);
+                    break;
+            }
         }
 
         public void OnCancelButtonClick()
@@ -168,25 +214,27 @@ namespace UI
 
         public void OnNextLevelButtonClick()
         {
-            if (LevelNumber >= 5)
-            {
-                SceneManager.LoadScene(Random.Range(1, 6));
-                LevelNumber += 1;
-                _getCoinsButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                SceneManager.LoadScene(LevelNumber + 1);
-                LevelNumber += 1;
-                _getCoinsButton.gameObject.SetActive(true);
-            }
-            
+            UpdateLevelValue(1);
+            _getCoinsButton.gameObject.SetActive(true);
+            SceneManager.LoadScene(LevelNumber > 5 ? Random.Range(1, 6) : LevelNumber);
+            PlayerPrefs.SetInt("LevelNumber", LevelNumber);
+            PlayerPrefs.Save();
+        }
+
+        private void UpdateLevelValue(int value)
+        {
+            LevelNumber += value;
+        }
+
+        private void UpdateSceneValue(int index)
+        {
+            SceneIndex = index;
         }
 
         public void OnGetCoinsButtonClick()
         {
             _getCoinsButton.gameObject.SetActive(false);
-            CoinsHolder.CoinsAmount += 25;
+            _coinsHolder.UpdateValue(25);
         }
         
         public void RestartLevel()
