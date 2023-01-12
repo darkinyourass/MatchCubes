@@ -1073,6 +1073,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1052490310}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _spawnDelay
+      value: 0.0045
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _tutorialData
       value: 
       objectReference: {fileID: 11400000, guid: 1d5e135e8b31771429725f4fdc5c3c48,

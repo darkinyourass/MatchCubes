@@ -787,6 +787,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _spawnDelay
+      value: 0.0045
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: <GridType>k__BackingField
       value: 1
       objectReference: {fileID: 0}

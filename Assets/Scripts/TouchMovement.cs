@@ -163,7 +163,7 @@ public class TouchMovement : MonoBehaviour
                         OnTutorialFourthClick?.Invoke();
                         break;
                 }
-                MoveCubeToEmptyPosition();
+                // MoveCubeToEmptyPosition();
                 CheckSelectablesBetweenCurrentAndSecond();
                 _emptySelectablesNearCurrentSelectable.RemoveRange(0, _emptySelectablesNearCurrentSelectable.Count);
                 
@@ -312,9 +312,14 @@ public class TouchMovement : MonoBehaviour
         cube1.LineRenderer.enabled = true;
         cube2.LineRenderer.enabled = true;
         
-        Debug.Log(_emptySelectables.Count);
         _mergedCubes.RemoveRange(0, _mergedCubes.Count);
     }
+
+    private bool CheckForMove()
+    {
+        return _secondSelectable.MeshRenderer.enabled == false;
+    }
+
 
     private void CheckSelectablesBetweenCurrentAndSecond()
     {
@@ -342,13 +347,37 @@ public class TouchMovement : MonoBehaviour
 
         foreach (var selectable in _raycastSelectables)
         {
+            if (CheckForMove())
+            {
+                switch (selectable.MeshRenderer.enabled)
+                {
+                    case true when selectable != _currentSelectable:
+                    {
+                        AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
+                        _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);
+                        if (!IsMoving)
+                        {
+                            SetSelectablesNull();
+                        }
+                        return;
+                    }
+                    case false:
+                        continue;
+                }
+
+                _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);
+                MoveCubeToEmptyPosition();
+                return;
+            }
+
+            if (CheckForMove()) continue;
             if (selectable.ColorType != _currentSelectable.ColorType && selectable.MeshRenderer.enabled)
             {
                 AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
             }
 
             if (selectable.ColorType == _currentSelectable.ColorType && selectable.MeshRenderer.enabled) continue;
-            
+
             _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);  
             
             if (!IsMoving)
@@ -361,39 +390,43 @@ public class TouchMovement : MonoBehaviour
         foreach (var selectable in _raycastSelectables)
         {
             selectable.MeshRenderer.enabled = false;
-        }
-        EmptySelectables.AddRange(_raycastSelectables);
-        OnMatchingCubes?.Invoke(_raycastSelectables);
-        AudioManager.Instance.PlayAudioClip(_matchAudioClip);
-        OnMakeMove?.Invoke();
-        _currentSelectable.MeshRenderer.enabled = false;
-        _currentSelectable.ColorTypeTransform.position = _currentPosition;  
-        
-        foreach (var selectable in _raycastSelectables)
-        {
             selectable.ParticleSystem.Play();
             selectable.LineRenderer.enabled = true;
         }
         
+        EmptySelectables.AddRange(_raycastSelectables);
+        OnMatchingCubes?.Invoke(_raycastSelectables);
+        AudioManager.Instance.PlayAudioClip(_matchAudioClip);
+        OnMakeMove?.Invoke();
+        
+        _currentSelectable.MeshRenderer.enabled = false;
+        _currentSelectable.ColorTypeTransform.position = _currentPosition;
+ 
         _currentSelectable.ParticleSystem.Play();
         _currentSelectable.LineRenderer.enabled = true;
         CheckForMatchingSelectablesCount();
-        SetSelectablesNull();
+        if (!IsMoving)
+        {
+            SetSelectablesNull();
+        }
         _raycastSelectables.RemoveRange(0, _raycastSelectables.Count);
     }
 
     private void MoveCubeToEmptyPosition()
     {
-        var heading = _secondPosition - _currentPosition;
-        var distance = heading.magnitude;
-        var direction = heading / distance;
-        if (_secondSelectable.MeshRenderer.enabled) return;
-        if (direction.x != 1 && direction.y != 1 && direction.z != 1 && direction.x != -1 && direction.y != -1 && direction.z != -1)
-        {
-            AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
-            SetSelectablesNull();
-            return;
-        }
+        // var heading = _secondPosition - _currentPosition;
+        // var distance = heading.magnitude;
+        // var direction = heading / distance;
+        
+        // if (_secondSelectable.MeshRenderer.enabled) return;
+        
+        // if (direction.x != 1 && direction.y != 1 && direction.z != 1 && direction.x != -1 && direction.y != -1 && direction.z != -1)
+        // {
+        //     AudioManager.Instance.PlayAudioClip(_wrongAudioClip);
+        //     SetSelectablesNull();
+        //     return;
+        // }
+
         StartCoroutine(MoveCubeCo(_secondPosition));
         _secondSelectable.ColorTypeTransform.position = _currentPosition;
         _currentSelectable.ColorTypeTransform.gameObject.layer = _selectableLayerMask;

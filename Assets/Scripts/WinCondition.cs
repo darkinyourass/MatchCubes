@@ -55,8 +55,16 @@ namespace Cubes
 
         private IEnumerator RecreateGridCo()
         {
-            yield return new WaitForSeconds(0.1f);
+            const float delay = 1.1f;
+            yield return new WaitForSeconds(delay);
             _testGrid.gameObject.SetActive(true);
+        }
+
+        private IEnumerator SetGridToFalseCo()
+        {
+            const float delay = 1f;
+            yield return new WaitForSeconds(delay);
+            _testGrid.gameObject.SetActive(false);
         }
         
         private void AddToList(List<ISelectable> selectables)
@@ -79,7 +87,8 @@ namespace Cubes
                     _emptySelectables.AddRange(selectables);
                     if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
                     _emptySelectables.RemoveRange(0, _emptySelectables.Count);
-                    _testGrid.gameObject.SetActive(false);
+                    // _testGrid.gameObject.SetActive(false);
+                    StartCoroutine(SetGridToFalseCo());
                     _stateMachine.TimeValue += 20;
                     _stateMachine.CurrentValue += 20;
                     _testGrid.ResetCounter();

@@ -13,6 +13,8 @@ namespace Common.View
         
         int SelectingAnimationHash { get; set; }
         
+        int SpawningAnimationHash { get; set; }
+        
         Animator Animator { get; set; }
 
     }

@@ -18,6 +18,8 @@ namespace Common.View
         private ParticleSystemRenderer _particleSystemRenderer;
 
         public int SelectingAnimationHash { get; set; }
+        
+        public int SpawningAnimationHash { get; set; }
 
         public MeshRenderer MeshRenderer { get; private set; }
         
@@ -42,6 +44,7 @@ namespace Common.View
             ParticleSystem = GetComponent<ParticleSystem>();
             _particleSystemRenderer = GetComponent<ParticleSystemRenderer>();
             SelectingAnimationHash = Animator.StringToHash("IsSelecting");
+            SpawningAnimationHash = Animator.StringToHash("IsSpawning");
             LineRenderer.enabled = false;
         }
 

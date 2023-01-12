@@ -8,6 +8,8 @@ namespace Game.Camera
         private bool _isRotating;
         private Touch _touch;
 
+        [SerializeField] private float _rotationSpeed;
+
         private void LateUpdate()
         {
              MoveWithMouse();
@@ -31,6 +33,8 @@ namespace Game.Camera
             var delta = currentMousePosition - _lastMousePosition;
             _lastMousePosition = currentMousePosition;
 
+            delta *= _rotationSpeed;
+
             transform.Rotate(Vector3.up, delta.x);
             transform.Rotate(Vector3.right, -delta.y, Space.World);
         }
@@ -52,7 +56,7 @@ namespace Game.Camera
                         var currentMousePosition = Input.mousePosition;
                         var delta = currentMousePosition - _lastMousePosition;
                         _lastMousePosition = currentMousePosition;
-
+                        delta *= _rotationSpeed;
                         transform.Rotate(Vector3.up, delta.x);
                         transform.Rotate(Vector3.right, -delta.y, Space.World);
                     }

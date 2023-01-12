@@ -149,12 +149,13 @@ namespace UI
         private void OnLevelEnd()
         {
             StartCoroutine(SetGridFalseCo());
-            Grid.UpdateValue(true);
+            
         }
 
         private IEnumerator SetGridFalseCo()
         {
-            yield return new WaitForSeconds(2f);
+            const float delay = 2f;
+            yield return new WaitForSeconds(delay);
             _stars.SetStars(_progressBarValue.CurrentValue, _oneStarValue, _twoStarValue, _threeStarValue);
             Grid.gameObject.SetActive(false);
             IsLevelWon = true;
@@ -215,10 +216,19 @@ namespace UI
         public void OnNextLevelButtonClick()
         {
             UpdateLevelValue(1);
-            _getCoinsButton.gameObject.SetActive(true);
+            Grid.UpdateValue(true);
+            // _getCoinsButton.gameObject.SetActive(true);
+            StartCoroutine(SetButtonTrueCo());
             SceneManager.LoadScene(LevelNumber > 5 ? Random.Range(1, 6) : LevelNumber);
             PlayerPrefs.SetInt("LevelNumber", LevelNumber);
             PlayerPrefs.Save();
+        }
+
+        private IEnumerator SetButtonTrueCo()
+        {
+            const float delay = 0.1f; 
+            yield return new WaitForSeconds(delay);
+            _getCoinsButton.gameObject.SetActive(true);
         }
 
         private void UpdateLevelValue(int value)

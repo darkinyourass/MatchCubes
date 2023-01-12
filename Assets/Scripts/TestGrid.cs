@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
@@ -50,6 +51,9 @@ namespace DefaultNamespace
 
         private const int Counter = 3;
 
+        [Header("Spawn Delay")] 
+        [SerializeField] private float _spawnDelay;
+
         private void OnEnable()
         {
             int boolValue = PlayerPrefs.GetInt("Tutorial", 0);
@@ -61,17 +65,33 @@ namespace DefaultNamespace
                 _touchMovement.OnTutorialThirdClick += ClickThird;
                 _touchMovement.OnTutorialFourthClick += ClickFourth;
                 CreateTutorialGrid();
+                Cubes = GetComponentsInChildren<ColorView>();
+                AllCubes.AddRange(Cubes);
+                _touchMovement._colorViews.AddRange(Cubes);
+                OnGameStarted?.Invoke();
             }
             else
             {
-                CreateGrid();
+                StartCoroutine(CreateGrid());
+                // CreateGrid();
             }
-
-            Cubes = GetComponentsInChildren<ColorView>();
-            AllCubes.AddRange(Cubes);
-            _touchMovement._colorViews.AddRange(Cubes);
-            OnGameStarted?.Invoke();
+            
+            
+            // StartCoroutine(SpawnAnimationCo());
         }
+
+        // private IEnumerator SpawnAnimationCo()
+        // {
+        //     foreach (var cube in AllCubes)
+        //     {
+        //         yield return new WaitForSeconds(0.03f);
+        //         cube.Animator.SetBool(cube.SpawningAnimationHash, true);
+        //     }
+        //     foreach (var cube in AllCubes)
+        //     {
+        //         cube.Animator.SetBool(cube.SpawningAnimationHash, false);
+        //     }
+        // }
 
         private void OnDisable()
         {
@@ -86,6 +106,12 @@ namespace DefaultNamespace
             AllCubes.RemoveRange(0, AllCubes.Count);
             _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
         }
+
+        // private void Update()
+        // {
+        //     Debug.Log($"AllCubes count - {AllCubes.Count}");
+        //     Debug.Log($"ColorViews count - {_touchMovement._colorViews.Count}");
+        // }
 
         public void UpdateValue(bool value)
         {
@@ -118,31 +144,54 @@ namespace DefaultNamespace
             }
             return colors.OrderBy(item => random.Next()).ToArray();
         }
-        
-        private void CreateGrid()
+
+        private IEnumerator CreateGrid()
         {
             _grid = new GameObject[_size, _size, _size];
             var colors = GenerateColorsPref(_size * _size * _size);
             var counter = 0;
+            var randomIndex = UnityEngine.Random.Range(0, 8);
+            var currentCenterCube = 0;
             for (var i = 0; i < _size; i++)
             {
                 for (var j = 0; j < _size; j++)
                 {
                     for (var k = 0; k < _size; k++)
                     {
+                        
                         _grid[i, j, k] = _diContainer.InstantiatePrefab(_cubePrefab, new Vector3(i, j, k ),
                             Quaternion.identity, transform);
+                        _grid[i, j, k].GetComponent<ISelectable>()
+                            .Animator.SetBool(_grid[i, j, k].GetComponent<ISelectable>().SpawningAnimationHash, true);
+                        
+                        yield return new WaitForSeconds(_spawnDelay);
+
+                        AllCubes.Add((ColorView)_grid[i, j, k].GetComponent<ISelectable>());
+                        _touchMovement._colorViews.Add((ColorView)_grid[i, j, k].GetComponent<ISelectable>());
+                        
+                        
                         if (_size != 2)
                         {
                             if ((i == _size / 2 || i == (_size / 2) - 1) && (j == _size / 2 || j == (_size / 2) - 1) &&
                                 (k == _size / 2 || k == (_size / 2) - 1))
                             {
-                                _grid[i, j, k].GetComponent<ISelectable>().SetColor((int)ColorType.White);
+                                if (randomIndex == currentCenterCube)
+                                {
+                                    _grid[i, j, k].GetComponent<ISelectable>().SetColor((int) ColorType.White);
+                                }
+                                else
+                                {
+                                    _grid[i, j, k].GetComponent<ISelectable>().SetColor(colors[counter]);
+                                    counter++;
+                                }
+
+                                currentCenterCube++;
                             }
                             else
                             {
                                 _grid[i, j, k].GetComponent<ISelectable>().SetColor(colors[counter]);
                                 counter++;
+                                
                             }
                         }
                         else
@@ -151,8 +200,15 @@ namespace DefaultNamespace
                             counter++;
                         }
                     }
-                }
+                }   
             }
+
+
+            foreach (var cube in AllCubes)
+            {
+                cube.Animator.SetBool(cube.SpawningAnimationHash, false);
+            }
+            OnGameStarted?.Invoke();
         }
 
         private void CreateTutorialGrid()
