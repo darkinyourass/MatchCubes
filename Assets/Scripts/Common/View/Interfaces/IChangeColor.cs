@@ -9,7 +9,7 @@ namespace Common.View
 
         ParticleSystem ParticleSystem { get; set; }
         
-        LineRenderer LineRenderer { get; set; }
+        LineRenderer EmptyCubeLineRenderer { get; set; }
         
         void SetColor(int type);
 

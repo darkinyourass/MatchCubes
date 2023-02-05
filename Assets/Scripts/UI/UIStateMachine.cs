@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 using Cubes;
-using UnityEditor;
 using Random = UnityEngine.Random;
 
 namespace UI
@@ -120,6 +118,7 @@ namespace UI
 
         private void Update()
         {
+            Debug.Log($"Current scene {SceneIndex}");
             IsLost();
             CurrentState.UpdateStates();
         }

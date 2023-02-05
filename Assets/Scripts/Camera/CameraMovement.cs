@@ -41,8 +41,6 @@ public class CameraMovement : MonoBehaviour
         //     return;
         // }
 
-        Debug.Log(_camera.gameObject.transform.rotation.z);
-       
         // MoveCamera();
         // MoveCameraWithMouse();
         // RotateCamera();

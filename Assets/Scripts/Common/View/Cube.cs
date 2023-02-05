@@ -1,20 +1,23 @@
 ﻿using System;
 using Common.Presenter;
+using DefaultNamespace;
 using UnityEngine;
 using Zenject;
 
 namespace Common.View
 {
-    public class ColorView : MonoBehaviour, ISelectable
+    public class Cube : MonoBehaviour, ISelectable
     {
         [Inject] 
         private IColorPresenter _colorPresenter;
+        public event Action<ISelectable> OnMouseDownAsButton;
+        // public event Action<ISelectable> OnMouseDownOverCube;
+        // public event Action OnTouchOrMouseUp;
 
         [SerializeField] private ColorType _colorType;
         
         private static readonly int Color1 = Shader.PropertyToID("_Color");
 
-        public ParticleSystem ParticleSystem { get; set; }
         private ParticleSystemRenderer _particleSystemRenderer;
 
         public int SelectingAnimationHash { get; set; }
@@ -25,33 +28,43 @@ namespace Common.View
         
         public Animator Animator { get; set; }
 
-        public event Action<ISelectable> OnMouseDownAsButton;
-
+        public ParticleSystem ParticleSystem { get; set; }
+        
+        [field: SerializeField]
         public bool IsSelected { get; private set; }
         
         public Transform ColorTypeTransform { get; set; }
 
         public ColorType ColorType => _colorType;
 
-        public LineRenderer LineRenderer { get; set; }
+        [field: SerializeField]
+        public LineRenderer EmptyCubeLineRenderer { get; set; }
+        
+        [field: SerializeField]
+        public LineRenderer SelectedCubeLineRenderer { get; set; }
+
+        private Selection _selectionRenderer;
 
         private void Awake()
         {
             MeshRenderer = GetComponent<MeshRenderer>();
             Animator = GetComponent<Animator>();
-            LineRenderer = GetComponent<LineRenderer>();
+            EmptyCubeLineRenderer = GetComponent<LineRenderer>();
+            
             ColorTypeTransform = GetComponent<Transform>();
             ParticleSystem = GetComponent<ParticleSystem>();
             _particleSystemRenderer = GetComponent<ParticleSystemRenderer>();
+            EmptyCubeLineRenderer.enabled = false;
             SelectingAnimationHash = Animator.StringToHash("IsSelecting");
             SpawningAnimationHash = Animator.StringToHash("IsSpawning");
-            LineRenderer.enabled = false;
         }
 
         private void Start()
         {
-            
             _colorPresenter.SetType(_colorType);
+            _selectionRenderer = GetComponentInChildren<Selection>();
+            SelectedCubeLineRenderer = _selectionRenderer.SelectionRenderer;
+            SelectedCubeLineRenderer.enabled = false;
         }
 
         public void SetColor(int type)
@@ -60,15 +73,25 @@ namespace Common.View
             _particleSystemRenderer.material = MeshRenderer.material;
         }
 
-        public void Select()
+        public void SelectDeselect()
         {
             IsSelected = !IsSelected;
         }
 
-        private void OnMouseUpAsButton()
-        {
-            OnMouseDownAsButton?.Invoke(this);
-        }
+        // private void OnMouseUpAsButton()
+        // {
+        //     OnMouseDownAsButton?.Invoke(this);
+        // }
+
+        // private void OnMouseUp()
+        // {
+        //     OnTouchOrMouseUp?.Invoke();
+        // }
+        //
+        // private void OnMouseDra()
+        // {
+        //     OnMouseDownOverCube?.Invoke(this);
+        // }
 
         public void SetMaterial(ColorType colorType)
         {

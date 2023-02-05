@@ -73,19 +73,19 @@ namespace Cubes
             {
                 case GridType.Default:
                     _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
+                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
                     _emptySelectables.RemoveRange(0, _emptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.DefaultTimer:
                     _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
+                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
                     _emptySelectables.RemoveRange(0, _emptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.EndlessTimer:
                     _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count != _touchMovement._colorViews.Count) return;
+                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
                     _emptySelectables.RemoveRange(0, _emptySelectables.Count);
                     // _testGrid.gameObject.SetActive(false);
                     StartCoroutine(SetGridToFalseCo());
@@ -102,7 +102,7 @@ namespace Cubes
                     break;
                 
             }
-            _touchMovement.EmptySelectables.RemoveRange(0, _touchMovement.EmptySelectables.Count);
+            _touchMovement.EmptyCubes.RemoveRange(0, _touchMovement.EmptyCubes.Count);
         }
     }
 }

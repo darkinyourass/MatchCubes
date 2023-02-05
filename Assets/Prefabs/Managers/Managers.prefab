@@ -89,14 +89,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _size: 4
-  isTutorialFinished: 0
   _cubePrefab: {fileID: 6108374576013174377, guid: b6dc88e7478567443a626367258b06f1,
     type: 3}
+  isTutorialFinished: 1
   <GridType>k__BackingField: 0
   <Cubes>k__BackingField: []
   _tutorial: {fileID: 0}
   _counter: 0
-  _tutorialData: {fileID: 11400000, guid: 1d5e135e8b31771429725f4fdc5c3c48, type: 2}
+  _spawnDelay: 0.0045
 --- !u!1 &7056511328606504536
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +211,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b20998b2134960848ae7494182db9948, type: 3}
+--- !u!1 &7056511329396684940 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7718546149288779291, guid: b20998b2134960848ae7494182db9948,
+    type: 3}
+  m_PrefabInstance: {fileID: 788142573886924439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7056511330198646758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056511329396684940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7b00cfee894881995317e719b35db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7056511329396684943 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7718546149288779288, guid: b20998b2134960848ae7494182db9948,

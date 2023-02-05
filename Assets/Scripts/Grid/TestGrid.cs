@@ -5,7 +5,6 @@ using System.Linq;
 using Common;
 using Common.View;
 using UI;
-using UnityEditor;
 using UnityEngine;
 using Zenject;
 using Random = System.Random;
@@ -37,8 +36,8 @@ namespace DefaultNamespace
         [field: SerializeField] public GridType GridType { get; set; }
 
         [field: Header("All cubes")]
-        [field: SerializeField] private ColorView[] Cubes { get; set; }
-        [field: SerializeField] private List<ColorView> AllCubes { get; } = new();
+        [field: SerializeField] private Cube[] Cubes { get; set; }
+        [field: SerializeField] private List<Cube> AllCubes { get; } = new();
         
         public int Size => _size;
 
@@ -65,9 +64,9 @@ namespace DefaultNamespace
                 _touchMovement.OnTutorialThirdClick += ClickThird;
                 _touchMovement.OnTutorialFourthClick += ClickFourth;
                 CreateTutorialGrid();
-                Cubes = GetComponentsInChildren<ColorView>();
+                Cubes = GetComponentsInChildren<Cube>();
                 AllCubes.AddRange(Cubes);
-                _touchMovement._colorViews.AddRange(Cubes);
+                _touchMovement.AllCubes.AddRange(Cubes);
                 OnGameStarted?.Invoke();
             }
             else
@@ -76,22 +75,8 @@ namespace DefaultNamespace
                 // CreateGrid();
             }
             
-            
             // StartCoroutine(SpawnAnimationCo());
         }
-
-        // private IEnumerator SpawnAnimationCo()
-        // {
-        //     foreach (var cube in AllCubes)
-        //     {
-        //         yield return new WaitForSeconds(0.03f);
-        //         cube.Animator.SetBool(cube.SpawningAnimationHash, true);
-        //     }
-        //     foreach (var cube in AllCubes)
-        //     {
-        //         cube.Animator.SetBool(cube.SpawningAnimationHash, false);
-        //     }
-        // }
 
         private void OnDisable()
         {
@@ -104,7 +89,7 @@ namespace DefaultNamespace
                 Destroy(cube.gameObject);
             }
             AllCubes.RemoveRange(0, AllCubes.Count);
-            _touchMovement._colorViews.RemoveRange(0, _touchMovement._colorViews.Count);
+            _touchMovement.AllCubes.RemoveRange(0, _touchMovement.AllCubes.Count);
         }
 
         // private void Update()
@@ -166,8 +151,8 @@ namespace DefaultNamespace
                         
                         yield return new WaitForSeconds(_spawnDelay);
 
-                        AllCubes.Add((ColorView)_grid[i, j, k].GetComponent<ISelectable>());
-                        _touchMovement._colorViews.Add((ColorView)_grid[i, j, k].GetComponent<ISelectable>());
+                        AllCubes.Add((Cube)_grid[i, j, k].GetComponent<ISelectable>());
+                        _touchMovement.AllCubes.Add((Cube)_grid[i, j, k].GetComponent<ISelectable>());
                         
                         
                         if (_size != 2)
@@ -230,7 +215,7 @@ namespace DefaultNamespace
             _grid[0, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Red);
             _grid[0, 1, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Blue);
             _tutorial.SetHandImagePosition(_grid[0, 1, 0].transform.position + new Vector3(0.6f, -0.5f, -0.7f));
-            _tutorial.SetTutorialText("TAP ON CUBE");
+            _tutorial.SetTutorialText("TAP AND HOLD TO SELECT CUBE");
             _grid[0, 1, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
             _grid[1, 0, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
             _grid[1, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Yellow);
@@ -241,21 +226,21 @@ namespace DefaultNamespace
         private void ClickFirstCube()
         {
             _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
-            _tutorial.SetTutorialText("TAP TO MERGE");
+            _tutorial.SetTutorialText("MOVE YOUR FINGER TO THE SAME CUBE TO SELECT AND MERGE");
             IsFirstClicked = true;
         }
 
         private void ClickSecondCube()
         {
             _tutorial.SetHandImagePosition(_grid[1, 0, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
-            _tutorial.SetTutorialText("TAP ON CUBE");
+            _tutorial.SetTutorialText("SELECT CUBE");
             IsSecondClicked = true;
         }
 
         private void ClickThird()
         {
             _tutorial.SetHandImagePosition(_grid[1, 1, 0].transform.position + new Vector3(0.5f, -0.5f, -0.7f));
-            _tutorial.SetTutorialText("TAP TO MOVE");
+            _tutorial.SetTutorialText("MOVE YOUR FINGER TO THE EMPTY CUBE TO MOVE");
             IsThirdClicked = true;
         }
 

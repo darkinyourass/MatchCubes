@@ -1,19 +1,31 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace Game.Camera
 {
     public class ObjectRotation : MonoBehaviour
     {
         private Vector3 _lastMousePosition;
-        private bool _isRotating;
+        public bool _isRotating;
         private Touch _touch;
 
         [SerializeField] private float _rotationSpeed;
 
+        private TouchMovement _touchMovement;
+
+        [Inject]
+        private void Constructor(TouchMovement touchMovement)
+        {
+            _touchMovement = touchMovement;
+        }
+
         private void LateUpdate()
         {
-             MoveWithMouse();
-             MoveWithTouch();
+            if (!_touchMovement.IsSelectingCubes)
+            {
+                MoveWithMouse();
+                MoveWithTouch();
+            }
         }
 
         private void MoveWithMouse()
