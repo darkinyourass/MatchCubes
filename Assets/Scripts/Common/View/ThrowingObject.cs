@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Common.View
 { public class ThrowingObject: MonoBehaviour
     {
-        [field: SerializeField] public float MovementDuration { get; set; }
+        [field: SerializeField] private float MovementDuration { get; set; }
         [SerializeField] private GameObject _throwingObjectPrefab;
         
         private bool IsMoving { get; set; }
@@ -16,16 +16,18 @@ namespace Common.View
         private float _maxDistance;
 
 
-        public void Throw(ISelectable firstSelectable, List<ISelectable> objectsToThrow, List<ISelectable> cubes)
+        public void Throw(List<ISelectable> objectsToThrow, List<ISelectable> cubes)
         {
-            StartCoroutine(ThrowObjectCo(firstSelectable, objectsToThrow, cubes));
+            StartCoroutine(ThrowObjectCo(objectsToThrow, cubes));
         }
 
-        private IEnumerator ThrowObjectCo(ISelectable firstSelectable, List<ISelectable> objectsToThrow, List<ISelectable> cubes)
+        private IEnumerator ThrowObjectCo(List<ISelectable> objectsToThrow, List<ISelectable> cubes)
         {
             float timeElapsed = 0;
-            var startPosition = firstSelectable.ColorTypeTransform.position;
-         
+            // var startPosition = firstSelectable.ColorTypeTransform.position;
+
+            var startPosition = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 6f));
+            
             for (var i = 0; i < objectsToThrow.Count; i++)
             {
                 _sphere = Instantiate(_throwingObjectPrefab, startPosition, Quaternion.identity, transform);

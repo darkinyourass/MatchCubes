@@ -399,7 +399,7 @@ namespace Test
         OnMatchingCubes?.Invoke(_mergedCubes);
         
         EmptySelectables.AddRange(cubes);
-        _throwingObject.Throw(_firstSelectable, _mergedCubes, cubes);
+        // _throwingObject.Throw(_firstSelectable, _mergedCubes, cubes);
     }
     }
 }

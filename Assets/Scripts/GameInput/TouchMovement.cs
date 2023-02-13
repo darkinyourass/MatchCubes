@@ -327,15 +327,15 @@ public class TouchMovement : MonoBehaviour
             return;
         }
         
+        if (_objectRotation.IsRotating || _objectRotation.IsZooming || Input.touchCount != 1)
+        {
+            return;
+        }
+        
         _ray = _camera.ScreenPointToRay(Input.mousePosition);
     
         if (Physics.Raycast(_ray, out var hit, _layerMask))
         {
-            if (_objectRotation._isRotating)
-            {
-                return;
-            }
-
             _selection = hit.transform.GetComponent<ISelectable>();
             if (_selection != null)
             {
@@ -491,7 +491,7 @@ public class TouchMovement : MonoBehaviour
         {
             return;
         }
-        if (_objectRotation._isRotating)
+        if (_objectRotation.IsRotating)
         {
             return;
         }   
@@ -700,6 +700,6 @@ public class TouchMovement : MonoBehaviour
         OnMatchingCubes?.Invoke(_mergedCubes);
         
         EmptyCubes.AddRange(cubes);
-        _throwingObject.Throw(_firstSelectable, _mergedCubes, cubes);
+        _throwingObject.Throw(_mergedCubes, cubes);
     }
 }
