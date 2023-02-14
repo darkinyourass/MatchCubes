@@ -74,6 +74,8 @@ public class TouchMovement : MonoBehaviour
     public event Action OnTutorialSecondCubeClick;
     public event Action OnTutorialThirdClick;
     public event Action OnTutorialFourthClick;
+
+    public event Action OnTutorialFifthCubeClick;
     
     public bool IsSelectingCubes { get; set; }
     
@@ -327,7 +329,7 @@ public class TouchMovement : MonoBehaviour
             return;
         }
         
-        if (_objectRotation.IsRotating || _objectRotation.IsZooming || Input.touchCount != 1)
+        if (_objectRotation.IsRotating || _objectRotation.IsZooming)
         {
             return;
         }
@@ -356,6 +358,10 @@ public class TouchMovement : MonoBehaviour
 
                 if (_firstSelectable.ColorType == ColorType.White)
                 {
+                    if (!TestGrid.IsFifthClicked)
+                    {
+                        OnTutorialFifthCubeClick?.Invoke();
+                    }
                     CheckForWhiteCube();
                     return;
                 }

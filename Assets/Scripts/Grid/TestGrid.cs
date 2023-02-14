@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Common.View;
+using Common.View.Tutorial;
 using UI;
 using UnityEngine;
 using Zenject;
@@ -27,6 +28,7 @@ namespace DefaultNamespace
         public static bool IsSecondClicked;
         public static bool IsThirdClicked;
         public static bool IsFourthClicked;
+        public static bool IsFifthClicked;
 
         public delegate void OnCounterValueChange(int counter);    
         public OnCounterValueChange CounterValueChange;
@@ -53,6 +55,9 @@ namespace DefaultNamespace
         [Header("Spawn Delay")] 
         [SerializeField] private float _spawnDelay;
 
+
+        [SerializeField] private TutorialPanel _tutorialPanel;
+
         private void OnEnable()
         {
             int boolValue = PlayerPrefs.GetInt("Tutorial", 0);
@@ -63,6 +68,7 @@ namespace DefaultNamespace
                 _touchMovement.OnTutorialSecondCubeClick += ClickSecondCube;
                 _touchMovement.OnTutorialThirdClick += ClickThird;
                 _touchMovement.OnTutorialFourthClick += ClickFourth;
+                // _touchMovement.OnTutorialFifthCubeClick += ClickFifth;
                 CreateTutorialGrid();
                 Cubes = GetComponentsInChildren<Cube>();
                 AllCubes.AddRange(Cubes);
@@ -218,7 +224,7 @@ namespace DefaultNamespace
             _tutorial.SetTutorialText("TAP AND HOLD TO SELECT CUBE");
             _grid[0, 1, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
             _grid[1, 0, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Green);
-            _grid[1, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Yellow);
+            _grid[1, 0, 1].GetComponent<ISelectable>().SetColor((int)ColorType.White);
             _grid[1, 1, 0].GetComponent<ISelectable>().SetColor((int)ColorType.Blue);
             _grid[1, 1, 1].GetComponent<ISelectable>().SetColor((int)ColorType.Yellow);
         }
@@ -248,6 +254,15 @@ namespace DefaultNamespace
         {
             IsFourthClicked = true;
             _tutorial.gameObject.SetActive(false);
+
+
+            IEnumerator SetPanel()
+            {
+                yield return new WaitForSeconds(0.5f);
+                _tutorialPanel.gameObject.SetActive(true);
+            }
+
+            StartCoroutine(SetPanel());
         }
     }
 }

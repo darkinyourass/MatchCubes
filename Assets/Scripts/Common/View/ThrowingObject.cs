@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,13 @@ namespace Common.View
         private float _maxDistance;
 
 
+        private Camera _camera;
+
+        private void OnEnable()
+        {
+            _camera = FindObjectOfType<Camera>();
+        }
+
         public void Throw(List<ISelectable> objectsToThrow, List<ISelectable> cubes)
         {
             StartCoroutine(ThrowObjectCo(objectsToThrow, cubes));
@@ -26,7 +34,7 @@ namespace Common.View
             float timeElapsed = 0;
             // var startPosition = firstSelectable.ColorTypeTransform.position;
 
-            var startPosition = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 6f));
+            var startPosition = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 6f));
             
             for (var i = 0; i < objectsToThrow.Count; i++)
             {

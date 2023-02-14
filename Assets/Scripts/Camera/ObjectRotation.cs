@@ -114,7 +114,7 @@ namespace Game.Camera
             if (!_touchMovement.IsSelectingCubes)
             {
                 MoveWithTouch();
-                // MoveWithMouse();
+                MoveWithMouse();
             }
         }
         
