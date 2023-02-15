@@ -114,8 +114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
   _distance: 17
-  _xRotationSpeed: 250
-  _yRotationSpeed: 250
+  _xRotationSpeed: 50
+  _yRotationSpeed: 50
   _yMinLimit: -90
   _yMaxLimit: 90
   _minZoomDistance: 13

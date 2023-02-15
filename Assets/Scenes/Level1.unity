@@ -554,19 +554,9 @@ PrefabInstance:
       objectReference: {fileID: 783036281}
     - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
         type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 783036281}
-    - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
-        type: 3}
       propertyPath: _target
       value: 
       objectReference: {fileID: 783036281}
-    - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
-        type: 3}
-      propertyPath: distance
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 6396661975042530159, guid: 54c640bac32f6d746ab56f46efa35abe,
         type: 3}
       propertyPath: m_Name

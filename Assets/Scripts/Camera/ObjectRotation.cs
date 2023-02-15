@@ -1,5 +1,8 @@
 ﻿using System;
+using DefaultNamespace;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Game.Camera
@@ -12,11 +15,14 @@ namespace Game.Camera
         private Touch _firstTouch;
 
         private TouchMovement _touchMovement;
+
+        private TestGrid _testGrid;
         
         [Inject]
-        private void Constructor(TouchMovement touchMovement)
+        private void Constructor(TouchMovement touchMovement, TestGrid testGrid)
         {
             _touchMovement = touchMovement;
+            _testGrid = testGrid;
         }
         
         // private Vector3 _lastMousePosition;
@@ -99,7 +105,7 @@ namespace Game.Camera
         
         private void Start()
         {
-            Vector3 angles = transform.eulerAngles;
+            var angles = transform.eulerAngles;
             _xRotation = angles.y;
             _yRotation = angles.x;
         }
@@ -111,11 +117,12 @@ namespace Game.Camera
             // Debug.Log($"Selection: {_touchMovement.IsSelectingCubes}");
             
             // Debug.Log(_touch);
-            if (!_touchMovement.IsSelectingCubes)
+            if (!_touchMovement.IsSelectingCubes && _testGrid.IsCameraRotatingAvailable)
             {
                 MoveWithTouch();
-                MoveWithMouse();
+                // MoveWithMouse();
             }
+
         }
         
         private void MoveWithMouse()
@@ -173,8 +180,6 @@ namespace Game.Camera
                         IsRotating = false;
                         break;
                 }
-                
-                
             }
             
             else if (Input.touchCount == 2)

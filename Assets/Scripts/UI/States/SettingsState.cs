@@ -31,12 +31,6 @@ namespace UI.States
                 SwitchState(StateFactory.Gameplay());
                 StateContext.IsResumeButtonPressed = false;
             }
-
-            if (StateContext.IsMenuButtonPressed)
-            {
-                SwitchState(StateFactory.Menu());
-                StateContext.IsMenuButtonPressed = false;
-            }
         }
     }
 }

@@ -658,6 +658,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: MovesCountValue
       objectReference: {fileID: 0}
+    - target: {fileID: 1515555565230149656, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515555565458512364, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515555565458512364, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515555565458512364, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515555565577465948, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1515555565658378448, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
       propertyPath: _oneStarValue
@@ -752,6 +777,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontSizeBase
       value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164524543361145455, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164524543361145455, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164524543361145455, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 136
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c80e8a27191be4049a23daca4de9f01e, type: 3}
@@ -906,7 +946,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _spawnDelay
-      value: 0.0045
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: isTutorialFinished

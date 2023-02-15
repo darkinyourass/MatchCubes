@@ -899,19 +899,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _depth
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _width
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _height
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _spawnDelay
-      value: 0.0045
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: isTutorialFinished

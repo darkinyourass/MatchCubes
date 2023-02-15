@@ -1,5 +1,6 @@
 ﻿using System;
 using DefaultNamespace;
+using UI;
 using UnityEngine;
 using Zenject;
 
@@ -9,7 +10,8 @@ namespace Common.View
     {
         public event Action OnLevelTypeButtonClicked;
         private TestGrid _testGrid;
-        private Timer _timer;  
+        private Timer _timer;
+        private UIStateMachine _uiStateMachine;
         
         [Inject]
         private void Constructor(Timer timer)
@@ -18,13 +20,20 @@ namespace Common.View
         }
 
         [Inject]
-        private void Constructor(TestGrid testGrid)
+        private void Constructor(TestGrid testGrid, UIStateMachine uiStateMachine)
         {
             _testGrid = testGrid;
+            _uiStateMachine = uiStateMachine;
         }
 
-        public void OnPlayButtonClick()
+        private void Awake()
         {
+            OnPlayButtonClick();
+        }
+
+        private void OnPlayButtonClick()
+        {
+            _uiStateMachine.CurrentValue = _uiStateMachine.TimeValue;
             OnLevelTypeButtonClicked?.Invoke();
             _testGrid.gameObject.SetActive(true);
             switch (_testGrid.GridType)
@@ -40,6 +49,7 @@ namespace Common.View
                     _timer.IsTimerSet = true;
                     break;
             }
+            
         }
 
         // public void OnDefaultClick()

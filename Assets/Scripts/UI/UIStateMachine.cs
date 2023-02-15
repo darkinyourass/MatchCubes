@@ -24,6 +24,7 @@ namespace UI
         [SerializeField] private PopUpTextView _popUpTextView;
         [SerializeField] private Stars _stars;
         [SerializeField] private ProgressBarValue _progressBarValue;
+        [SerializeField] private GameObject _tapToPlayBackground;
 
         [Header("Stars values")] 
         [SerializeField] private int _oneStarValue;
@@ -60,7 +61,7 @@ namespace UI
         
         public bool IsSettingsButtonPressed { get; set; }
         
-        public bool IsMenuButtonPressed { get; set; }
+        public bool IsNextLevelButtonPressed { get; set; }
         
         public bool IsLevelWon { get; set; }
         
@@ -95,9 +96,11 @@ namespace UI
             _winCondition = FindObjectOfType<WinCondition>();
             _winCondition.OnAllCubesMatched += OnLevelEnd;
             StateFactory = new UIStateFactory(this);
-            CurrentState = StateFactory.Menu();
+            CurrentState = StateFactory.Gameplay();
             CurrentState.EnterState();
             _playButton.OnLevelTypeButtonClicked += OnLevelChose;
+            _stars.ResetStars();
+            
         }
         
         private IEnumerator Start()
@@ -119,6 +122,12 @@ namespace UI
         private void Update()
         {
             Debug.Log($"Current scene {SceneIndex}");
+
+            if (Input.touchCount > 0)
+            {
+                _tapToPlayBackground.SetActive(false);
+            }
+            
             IsLost();
             CurrentState.UpdateStates();
         }
@@ -148,7 +157,6 @@ namespace UI
         private void OnLevelEnd()
         {
             StartCoroutine(SetGridFalseCo());
-            
         }
 
         private IEnumerator SetGridFalseCo()
@@ -165,7 +173,7 @@ namespace UI
         {
             CurrentValue = TimeValue;
             IsLevelSelected = true;
-            _stars.ResetStars();
+            
         }
 
         private void OnApplicationQuit()
@@ -203,7 +211,7 @@ namespace UI
 
         public void OnMenuButtonClick()
         {
-            IsMenuButtonPressed = true;
+            IsNextLevelButtonPressed = true;
             Grid.gameObject.SetActive(false);
         }
 
@@ -214,6 +222,8 @@ namespace UI
 
         public void OnNextLevelButtonClick()
         {
+            // Grid.gameObject.SetActive(false);
+            IsNextLevelButtonPressed = true;
             UpdateLevelValue(1);
             Grid.UpdateValue(true);
             // _getCoinsButton.gameObject.SetActive(true);

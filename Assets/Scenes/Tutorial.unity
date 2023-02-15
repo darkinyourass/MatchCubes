@@ -1218,6 +1218,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 1a2bff322a2fa254ba34ea48cd03fa8f,
         type: 2}
+    - target: {fileID: 1512548772, guid: c80e8a27191be4049a23daca4de9f01e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1512548773, guid: c80e8a27191be4049a23daca4de9f01e, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1553752249, guid: c80e8a27191be4049a23daca4de9f01e, type: 3}
       propertyPath: m_Name
       value: TutorialHand
@@ -1397,6 +1405,16 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 4626003405252815354, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6861858611622361587, guid: c80e8a27191be4049a23daca4de9f01e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7040985796900536596, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
       propertyPath: m_IsActive
@@ -1415,7 +1433,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1515555565061283259}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1515555565061283263}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 011bedd5b5239e04cbe3d22f3261bdc8, type: 3}
@@ -1445,6 +1463,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de201899e21d3a141b7b2f6287064e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1515555565061283263 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1515555565658378450, guid: c80e8a27191be4049a23daca4de9f01e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1515555565061283259}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1515555565061283264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515555565061283263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b578fccafd4bd7ba4ca86b3a87efeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7056511330198646753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1457,35 +1493,29 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _depth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _width
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
+      propertyPath: _height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _tutorial
       value: 
       objectReference: {fileID: 1052490310}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _spawnDelay
-      value: 0.0045
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: _tutorialData
-      value: 
-      objectReference: {fileID: 11400000, guid: 1d5e135e8b31771429725f4fdc5c3c48,
-        type: 2}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _tutorialPanel
       value: 
       objectReference: {fileID: 607850633}
-    - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
-      propertyPath: isTutorialFinished
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7056511328606504536, guid: 33e2899cf443c9e488eb38b83239a12d,
         type: 3}
       propertyPath: m_Name
       value: Managers
-      objectReference: {fileID: 0}
-    - target: {fileID: 7056511328606504536, guid: 33e2899cf443c9e488eb38b83239a12d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7056511328606504538, guid: 33e2899cf443c9e488eb38b83239a12d,
         type: 3}
@@ -1645,6 +1675,11 @@ PrefabInstance:
       propertyPath: _target
       value: 
       objectReference: {fileID: 564370944}
+    - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
+        type: 3}
+      propertyPath: _distance
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
         type: 3}
       propertyPath: _maxZoomDistance

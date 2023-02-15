@@ -26,7 +26,6 @@ namespace UI.States
 
         protected override void ExitState()
         {
-            StateContext.GamePlayCanvas.gameObject.SetActive(false);
             Time.timeScale = 0;
             AudioManager.Instance.MusicSource.Stop();
         }
@@ -35,11 +34,13 @@ namespace UI.States
         {
             if (StateContext.IsLevelWon)
             {
+                StateContext.GamePlayCanvas.gameObject.SetActive(false);
                 SwitchState(StateFactory.Win());
                 StateContext.IsLevelWon = false;
             }
             if (StateContext.IsLevelLost)
             {
+                StateContext.GamePlayCanvas.gameObject.SetActive(false);
                 SwitchState(StateFactory.Lose());
                 StateContext.IsLevelLost = false;
             }

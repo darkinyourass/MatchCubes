@@ -20,6 +20,11 @@ namespace DefaultNamespace
         
         [Header("Size")]
         [SerializeField] private int _size;
+        
+        [SerializeField] private int _height;
+        [SerializeField] private int _width;
+        [SerializeField] private int _depth;
+        
         [SerializeField] private GameObject _cubePrefab;
         
         public bool isTutorialFinished;
@@ -28,7 +33,9 @@ namespace DefaultNamespace
         public static bool IsSecondClicked;
         public static bool IsThirdClicked;
         public static bool IsFourthClicked;
-        public static bool IsFifthClicked;
+        
+        public bool IsCameraRotatingAvailable { get; set; }
+        // public static bool IsFifthClicked;
 
         public delegate void OnCounterValueChange(int counter);    
         public OnCounterValueChange CounterValueChange;
@@ -68,7 +75,6 @@ namespace DefaultNamespace
                 _touchMovement.OnTutorialSecondCubeClick += ClickSecondCube;
                 _touchMovement.OnTutorialThirdClick += ClickThird;
                 _touchMovement.OnTutorialFourthClick += ClickFourth;
-                // _touchMovement.OnTutorialFifthCubeClick += ClickFifth;
                 CreateTutorialGrid();
                 Cubes = GetComponentsInChildren<Cube>();
                 AllCubes.AddRange(Cubes);
@@ -77,6 +83,7 @@ namespace DefaultNamespace
             }
             else
             {
+                IsCameraRotatingAvailable = true;
                 StartCoroutine(CreateGrid());
                 // CreateGrid();
             }
@@ -138,16 +145,16 @@ namespace DefaultNamespace
 
         private IEnumerator CreateGrid()
         {
-            _grid = new GameObject[_size, _size, _size];
-            var colors = GenerateColorsPref(_size * _size * _size);
+            _grid = new GameObject[_width, _height, _depth];
+            var colors = GenerateColorsPref(_width * _height * _depth);
             var counter = 0;
             var randomIndex = UnityEngine.Random.Range(0, 8);
             var currentCenterCube = 0;
-            for (var i = 0; i < _size; i++)
+            for (var i = 0; i < _width; i++)
             {
-                for (var j = 0; j < _size; j++)
+                for (var j = 0; j < _height; j++)
                 {
-                    for (var k = 0; k < _size; k++)
+                    for (var k = 0; k < _depth; k++)
                     {
                         
                         _grid[i, j, k] = _diContainer.InstantiatePrefab(_cubePrefab, new Vector3(i, j, k ),
@@ -155,7 +162,7 @@ namespace DefaultNamespace
                         _grid[i, j, k].GetComponent<ISelectable>()
                             .Animator.SetBool(_grid[i, j, k].GetComponent<ISelectable>().SpawningAnimationHash, true);
                         
-                        yield return new WaitForSeconds(_spawnDelay);
+                        
 
                         AllCubes.Add((Cube)_grid[i, j, k].GetComponent<ISelectable>());
                         _touchMovement.AllCubes.Add((Cube)_grid[i, j, k].GetComponent<ISelectable>());
@@ -163,8 +170,8 @@ namespace DefaultNamespace
                         
                         if (_size != 2)
                         {
-                            if ((i == _size / 2 || i == (_size / 2) - 1) && (j == _size / 2 || j == (_size / 2) - 1) &&
-                                (k == _size / 2 || k == (_size / 2) - 1))
+                            if ((i == _width / 2 || i == (_width / 2) - 1) && (j == _height / 2 || j == (_height / 2) - 1) &&
+                                (k == _depth / 2 || k == (_depth / 2) - 1))
                             {
                                 if (randomIndex == currentCenterCube)
                                 {
@@ -194,6 +201,8 @@ namespace DefaultNamespace
                 }   
             }
 
+
+            yield return new WaitForSeconds(_spawnDelay);
 
             foreach (var cube in AllCubes)
             {
@@ -258,6 +267,7 @@ namespace DefaultNamespace
 
             IEnumerator SetPanel()
             {
+                IsCameraRotatingAvailable = true;
                 yield return new WaitForSeconds(0.5f);
                 _tutorialPanel.gameObject.SetActive(true);
             }

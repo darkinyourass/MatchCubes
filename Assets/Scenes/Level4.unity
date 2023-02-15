@@ -681,7 +681,7 @@ PrefabInstance:
     - target: {fileID: 1515555565658378448, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
       propertyPath: <TimeValue>k__BackingField
-      value: 90
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 1515555565658378449, guid: c80e8a27191be4049a23daca4de9f01e,
         type: 3}
@@ -911,7 +911,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: _spawnDelay
-      value: 0.0045
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1350676124, guid: 33e2899cf443c9e488eb38b83239a12d, type: 3}
       propertyPath: isTutorialFinished

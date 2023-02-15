@@ -26,10 +26,10 @@ namespace UI.States
         
         private void CheckStates()
         {
-            if (StateContext.IsMenuButtonPressed)
+            if (StateContext.IsNextLevelButtonPressed)
             {
-                SwitchState(StateFactory.Menu());
-                StateContext.IsMenuButtonPressed = false;
+                SwitchState(StateFactory.Gameplay());
+                StateContext.IsNextLevelButtonPressed = false;
             }
         }
     }

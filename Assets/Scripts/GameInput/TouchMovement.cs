@@ -47,6 +47,8 @@ public class TouchMovement : MonoBehaviour
     
     private bool IsMoving { get; set; }
     
+    // private bool IsWhiteCube { get; set; }
+    
     public List<ISelectable> EmptyCubes { get; set; } = new();
 
     private List<ISelectable> SelectedCubes { get; } = new ();
@@ -75,8 +77,6 @@ public class TouchMovement : MonoBehaviour
     public event Action OnTutorialThirdClick;
     public event Action OnTutorialFourthClick;
 
-    public event Action OnTutorialFifthCubeClick;
-    
     public bool IsSelectingCubes { get; set; }
     
     [Inject]
@@ -329,7 +329,7 @@ public class TouchMovement : MonoBehaviour
             return;
         }
         
-        if (_objectRotation.IsRotating || _objectRotation.IsZooming)
+        if (_objectRotation.IsRotating || _objectRotation.IsZooming || Input.touchCount != 1)
         {
             return;
         }
@@ -358,10 +358,11 @@ public class TouchMovement : MonoBehaviour
 
                 if (_firstSelectable.ColorType == ColorType.White)
                 {
-                    if (!TestGrid.IsFifthClicked)
-                    {
-                        OnTutorialFifthCubeClick?.Invoke();
-                    }
+                    // if (!TestGrid.IsFifthClicked)
+                    // {
+                    //     OnTutorialFifthCubeClick?.Invoke();
+                    // }
+
                     CheckForWhiteCube();
                     return;
                 }
@@ -501,6 +502,12 @@ public class TouchMovement : MonoBehaviour
         {
             return;
         }   
+        
+        if (_firstSelectable.ColorType == ColorType.White)
+        {
+            CheckForWhiteCube();
+            return;
+        }
         SecondDirectionSelectables.RemoveRange(0, SecondDirectionSelectables.Count);
         MergeSelectableCubes();
         
@@ -535,7 +542,8 @@ public class TouchMovement : MonoBehaviour
 
     private void CheckForWhiteCube()
     {
-        OnMakeMove?.Invoke();
+        // OnMakeMove?.Invoke();
+        // IsWhiteCube = true;
         foreach (var cube in AllCubes)
         {
             cube.EmptyCubeLineRenderer.enabled = false;

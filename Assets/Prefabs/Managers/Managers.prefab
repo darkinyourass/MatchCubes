@@ -89,6 +89,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _size: 4
+  _height: 4
+  _width: 4
+  _depth: 4
   _cubePrefab: {fileID: 6108374576013174377, guid: b6dc88e7478567443a626367258b06f1,
     type: 3}
   isTutorialFinished: 1
@@ -96,7 +99,8 @@ MonoBehaviour:
   <Cubes>k__BackingField: []
   _tutorial: {fileID: 0}
   _counter: 0
-  _spawnDelay: 0.0045
+  _spawnDelay: 2
+  _tutorialPanel: {fileID: 0}
 --- !u!1 &7056511328606504536
 GameObject:
   m_ObjectHideFlags: 0
