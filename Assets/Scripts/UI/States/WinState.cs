@@ -11,7 +11,7 @@ namespace UI.States
         public override void EnterState()
         {
             StateContext.WinCanvas.gameObject.SetActive(true);
-            Time.timeScale = 0;
+            // Time.timeScale = 0;
         }
 
         protected override void UpdateState()

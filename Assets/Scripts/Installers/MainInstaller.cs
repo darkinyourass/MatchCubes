@@ -2,6 +2,7 @@ using Common.Gateway;
 using Common.Presenter;
 using Common.Usecase;
 using Common.View;
+using Cubes;
 using DefaultNamespace;
 using UI;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class MainInstaller : MonoInstaller
     [SerializeField] private UIStateMachine _uiStateMachine;
     [SerializeField] private GetCoinsButton _getCoinsButton;
     [SerializeField] private CoinsHolder _coinsHolder;
+    [SerializeField] private WinCondition _winCondition;
 
     public override void InstallBindings()
     {
@@ -65,5 +67,6 @@ public class MainInstaller : MonoInstaller
         Container.Bind<UIStateMachine>().FromInstance(_uiStateMachine).AsSingle().NonLazy();
         Container.Bind<GetCoinsButton>().FromInstance(_getCoinsButton).AsTransient().NonLazy();
         Container.Bind<CoinsHolder>().FromInstance(_coinsHolder).AsSingle().NonLazy();
+        Container.Bind<WinCondition>().FromInstance(_winCondition).AsSingle().NonLazy();
     }
 }

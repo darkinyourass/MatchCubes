@@ -197,9 +197,6 @@ namespace Game.Camera
             var touchZero = Input.GetTouch(0);
             var touchOne = Input.GetTouch(1);
 
-            Debug.Log($"First {touchZero.phase}");
-            Debug.Log($"Second {touchOne.phase}");
-            
             var touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
             var touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 

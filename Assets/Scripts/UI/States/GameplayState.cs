@@ -26,7 +26,7 @@ namespace UI.States
 
         protected override void ExitState()
         {
-            Time.timeScale = 0;
+            // Time.timeScale = 0;
             AudioManager.Instance.MusicSource.Stop();
         }
         
@@ -46,6 +46,7 @@ namespace UI.States
             }
             if (StateContext.IsSettingsButtonPressed)
             {
+                StateContext.GamePlayCanvas.gameObject.SetActive(false);
                 SwitchState(StateFactory.Settings());
                 StateContext.IsSettingsButtonPressed = false;
             }

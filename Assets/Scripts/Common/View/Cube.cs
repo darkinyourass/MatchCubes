@@ -77,22 +77,7 @@ namespace Common.View
         {
             IsSelected = !IsSelected;
         }
-
-        // private void OnMouseUpAsButton()
-        // {
-        //     OnMouseDownAsButton?.Invoke(this);
-        // }
-
-        // private void OnMouseUp()
-        // {
-        //     OnTouchOrMouseUp?.Invoke();
-        // }
-        //
-        // private void OnMouseDra()
-        // {
-        //     OnMouseDownOverCube?.Invoke(this);
-        // }
-
+        
         public void SetMaterial(ColorType colorType)
         {
             switch (colorType)

@@ -206,7 +206,12 @@ public class TouchMovement : MonoBehaviour
 
     private bool CheckForMoving()
     {
-        return _lastSelectable.MeshRenderer.enabled == false;
+        if (_lastSelectable != null)
+        {
+            return _lastSelectable.MeshRenderer.enabled == false;
+        }
+
+        return true;
     }
 
     // private void SelectCubes()
@@ -501,11 +506,26 @@ public class TouchMovement : MonoBehaviour
         if (_objectRotation.IsRotating)
         {
             return;
-        }   
+        }
+
+        if (_firstSelectable == _lastSelectable)
+        {
+            foreach (var cube in SelectedCubes)
+            {
+                cube.SelectDeselect();
+                cube.SelectedCubeLineRenderer.enabled = false;
+            }
+            SelectedCubes.RemoveRange(0, SelectedCubes.Count);
+            _firstSelectable = null;
+            _lastSelectable = null;
+            IsSelectingCubes = false;
+            return;
+        }
         
         if (_firstSelectable.ColorType == ColorType.White)
         {
             CheckForWhiteCube();
+            _firstSelectable.SelectedCubeLineRenderer.enabled = false;
             return;
         }
         SecondDirectionSelectables.RemoveRange(0, SecondDirectionSelectables.Count);

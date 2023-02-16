@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Common.View;
 using DefaultNamespace;
 using UnityEngine;
@@ -31,7 +32,6 @@ namespace UI
         [SerializeField] private int _twoStarValue;
         [SerializeField] private int _threeStarValue;
 
-        
         [field: Header("Level value")]
         [field: SerializeField]
         public int LevelNumber { get; set; }
@@ -42,6 +42,8 @@ namespace UI
         [field: SerializeField] 
         public float TimeValue { get; set; }
         private float _currentTimeValue;
+
+        public event Action OnBombButtonClick;
 
         public PopUpTextView PopTextView => _popUpTextView;
         
@@ -56,6 +58,8 @@ namespace UI
         private GetCoinsButton _getCoinsButton;
 
         private CoinsHolder _coinsHolder;
+
+        private TouchMovement _touchMovement;
 
         public bool IsResumeButtonPressed { get; set; }
         
@@ -83,16 +87,18 @@ namespace UI
         private UIStateFactory StateFactory { get; set; }
 
         [Inject]
-        private void Constructor(Timer timer, TestGrid grid, GetCoinsButton coinsButton, CoinsHolder coinsHolder)
+        private void Constructor(Timer timer, TestGrid grid, GetCoinsButton coinsButton, CoinsHolder coinsHolder, TouchMovement touchMovement)
         {
             Timer = timer;
             Grid = grid;
             _getCoinsButton = coinsButton;
             _coinsHolder = coinsHolder;
+            _touchMovement = touchMovement;
         }
 
         private void Awake()
         {
+            // _winCanvas.gameObject.SetActive(false);
             _winCondition = FindObjectOfType<WinCondition>();
             _winCondition.OnAllCubesMatched += OnLevelEnd;
             StateFactory = new UIStateFactory(this);
@@ -100,7 +106,6 @@ namespace UI
             CurrentState.EnterState();
             _playButton.OnLevelTypeButtonClicked += OnLevelChose;
             _stars.ResetStars();
-            
         }
         
         private IEnumerator Start()
@@ -254,6 +259,15 @@ namespace UI
         {
             _getCoinsButton.gameObject.SetActive(false);
             _coinsHolder.UpdateValue(25);
+        }
+
+        public void OnBombBonusClick()
+        {
+            if (!_touchMovement.IsSelectingCubes)
+            {
+                _coinsHolder.UpdateValue(-75);
+                OnBombButtonClick?.Invoke();
+            }
         }
         
         public void RestartLevel()

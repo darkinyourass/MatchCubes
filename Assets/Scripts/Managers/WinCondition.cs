@@ -12,7 +12,9 @@ namespace Cubes
 {
     public class WinCondition : MonoBehaviour
     {
-        private readonly List<ISelectable> _emptySelectables = new ();
+        // private List<ISelectable> _emptySelectables = new ();
+
+        public List<ISelectable> EmptySelectables { get; set; } = new List<ISelectable>();
         public event Action OnAllCubesMatched;
         
         private TouchMovement _touchMovement;
@@ -72,21 +74,21 @@ namespace Cubes
             switch (_testGrid.GridType)
             {
                 case GridType.Default:
-                    _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
-                    _emptySelectables.RemoveRange(0, _emptySelectables.Count);
+                    EmptySelectables.AddRange(selectables);
+                    if (EmptySelectables.Count < _touchMovement.AllCubes.Count) return;
+                    EmptySelectables.RemoveRange(0, EmptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.DefaultTimer:
-                    _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
-                    _emptySelectables.RemoveRange(0, _emptySelectables.Count);
+                    EmptySelectables.AddRange(selectables);
+                    if (EmptySelectables.Count < _touchMovement.AllCubes.Count) return;
+                    EmptySelectables.RemoveRange(0, EmptySelectables.Count);
                     OnAllCubesMatched?.Invoke();
                     break;
                 case GridType.EndlessTimer:
-                    _emptySelectables.AddRange(selectables);
-                    if (_emptySelectables.Count < _touchMovement.AllCubes.Count) return;
-                    _emptySelectables.RemoveRange(0, _emptySelectables.Count);
+                    EmptySelectables.AddRange(selectables);
+                    if (EmptySelectables.Count < _touchMovement.AllCubes.Count) return;
+                    EmptySelectables.RemoveRange(0, EmptySelectables.Count);
                     // _testGrid.gameObject.SetActive(false);
                     StartCoroutine(SetGridToFalseCo());
                     _stateMachine.TimeValue += 20;
