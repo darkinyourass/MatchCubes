@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cubes;
+using Cubes.ObjectPooling.BombPool;
 using UnityEngine;
 using Zenject;
 
@@ -22,6 +23,8 @@ namespace Common.View
             _touchMovement = touchMovement;
             _winCondition = winCondition;
         }
+
+        private BombPool _bombPool;
         
         private HashSet<ISelectable> _triggeredCubes = new HashSet<ISelectable>();
 
@@ -35,6 +38,7 @@ namespace Common.View
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Raycast"), LayerMask.NameToLayer("Bomb"), true);
             _winCondition = FindObjectOfType<WinCondition>();
             _touchMovement = FindObjectOfType<TouchMovement>();
+            _bombPool = FindObjectOfType<BombPool>();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -82,7 +86,9 @@ namespace Common.View
         private IEnumerator DestroyBombCo()
         {
             yield return new WaitForSeconds(0.15f);
-            Destroy(gameObject);
+            _collider.enabled = false;
+            IsCollided = false; 
+            _bombPool.ReturnToPool(this);
         }
     }
 }

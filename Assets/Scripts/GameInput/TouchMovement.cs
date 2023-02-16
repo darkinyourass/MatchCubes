@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Common.View;
+using Cubes.ObjectPooling.PopUpTextPool;
 using DefaultNamespace;
 using Game.Camera;
 using GameInput;
@@ -78,6 +79,8 @@ public class TouchMovement : MonoBehaviour
     public event Action OnTutorialFourthClick;
 
     public bool IsSelectingCubes { get; set; }
+
+    private TextPool _textPool;
     
     [Inject]
     private void Constructor(TestGrid testGrid, UIStateMachine stateMachine, CoinsHolder coinsHolder)
@@ -91,6 +94,7 @@ public class TouchMovement : MonoBehaviour
     {
         _objectRotation = FindObjectOfType<ObjectRotation>();
         _throwingObject = FindObjectOfType<ThrowingObject>();
+        _textPool = FindObjectOfType<TextPool>();
         _camera = FindObjectOfType<Camera>();
         _selectableLayerMask = LayerMask.NameToLayer("Selectables");
         _ignoreLayerMask = LayerMask.NameToLayer("Ignore Raycast");
@@ -334,7 +338,7 @@ public class TouchMovement : MonoBehaviour
             return;
         }
         
-        if (_objectRotation.IsRotating || _objectRotation.IsZooming || Input.touchCount != 1)
+        if (_objectRotation.IsRotating || _objectRotation.IsZooming)
         {
             return;
         }
@@ -672,30 +676,30 @@ public class TouchMovement : MonoBehaviour
         {
             case 2:
                 _coinsHolder.UpdateValue(2);
-                _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                _uiStateMachine.PopTextView.SetTextValue("NICE");
+                // _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                _textPool.SetTextValue("NICE!");
                 break;
             case 3:
                 _coinsHolder.UpdateValue(4);
-                _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                _uiStateMachine.PopTextView.SetTextValue("COOL");
+                // _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                _textPool.SetTextValue("COOL!");
                 break;
             case 4:
                 _coinsHolder.UpdateValue(8);
-                _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                _uiStateMachine.PopTextView.SetTextValue("RADICAL");
+                // _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                _textPool.SetTextValue("RADICAL!");
                 FindAndMergeCubes(1);
                 break;
             case 5:
                 _coinsHolder.UpdateValue(12);
-                _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                _uiStateMachine.PopTextView.SetTextValue("AWESOME");
+                // _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                _textPool.SetTextValue("AWESOME!");
                 FindAndMergeCubes(3);
                 break;
             case 6:
                 _coinsHolder.UpdateValue(20);
-                _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                _uiStateMachine.PopTextView.SetTextValue("PERFECT");
+                // _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                _textPool.SetTextValue("PERFECT!");
                 FindAndMergeCubes(5);
                 break;
         }

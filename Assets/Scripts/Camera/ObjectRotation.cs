@@ -110,6 +110,8 @@ namespace Game.Camera
             _yRotation = angles.x;
         }
 
+        
+
         private void LateUpdate()
         {
             // Debug.Log($"Zoom: {IsZooming}");
@@ -120,7 +122,7 @@ namespace Game.Camera
             if (!_touchMovement.IsSelectingCubes && _testGrid.IsCameraRotatingAvailable)
             {
                 MoveWithTouch();
-                // MoveWithMouse();
+                MoveWithMouse();
             }
 
         }

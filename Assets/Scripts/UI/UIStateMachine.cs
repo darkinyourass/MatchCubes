@@ -22,7 +22,7 @@ namespace UI
 
         [Header("UI elements")]
         [SerializeField] private LevelTypeChoiceView _playButton;
-        [SerializeField] private PopUpTextView _popUpTextView;
+        // [SerializeField] private PopUpTextView _popUpTextView;
         [SerializeField] private Stars _stars;
         [SerializeField] private ProgressBarValue _progressBarValue;
         [SerializeField] private GameObject _tapToPlayBackground;
@@ -45,7 +45,7 @@ namespace UI
 
         public event Action OnBombButtonClick;
 
-        public PopUpTextView PopTextView => _popUpTextView;
+        // public PopUpTextView PopTextView => _popUpTextView;
         
         public Timer Timer { get; private set; }
 
@@ -265,7 +265,7 @@ namespace UI
         {
             if (!_touchMovement.IsSelectingCubes)
             {
-                _coinsHolder.UpdateValue(-75);
+                // _coinsHolder.UpdateValue(-75);
                 OnBombButtonClick?.Invoke();
             }
         }

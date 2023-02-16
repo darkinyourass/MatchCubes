@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6011451312462398452}
   - component: {fileID: 5786442098504233032}
+  - component: {fileID: 380378832}
   m_Layer: 0
   m_Name: BombSpawner
   m_TagString: Untagged
@@ -44,7 +45,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4f79003a48481d9a2f4ff8cb472d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 0}
   _bombPrefab: {fileID: 8938407181254237881, guid: d5522fab8c8ed5e42a56a1a7c737c04c,
     type: 3}
+  _target: {fileID: 0}
   _movementDuration: 1.1
+  _maxCooldown: 5
+  _currentCooldown: 0
+  _fill: {fileID: 0}
+  _bonusCost: 75
+--- !u!114 &380378832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6011451312462398451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de455addb8de4b79aa81c54ede44198b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectPrefab: {fileID: 8938407181254237881, guid: d5522fab8c8ed5e42a56a1a7c737c04c,
+    type: 3}
+  _poolSize: 10

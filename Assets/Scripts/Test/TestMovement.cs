@@ -252,34 +252,34 @@ namespace Test
         {
             switch (_raycastSelectables.Count)
             {
-                case 2:
-                    _coinsHolder.UpdateValue(2);
-                    _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                    _uiStateMachine.PopTextView.SetTextValue("NICE");
-                    break;
-                case 3:
-                    _coinsHolder.UpdateValue(4);
-                    _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                    _uiStateMachine.PopTextView.SetTextValue("COOL");
-                    break;
-                case 4:
-                    _coinsHolder.UpdateValue(8);
-                    _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                    _uiStateMachine.PopTextView.SetTextValue("RADICAL");
-                    FindAndMergeCubes(1);
-                    break;
-                case 5:
-                    _coinsHolder.UpdateValue(12);
-                    _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                    _uiStateMachine.PopTextView.SetTextValue("AWESOME");
-                    FindAndMergeCubes(3);
-                    break;
-                case 6:
-                    _coinsHolder.UpdateValue(20);
-                    _uiStateMachine.PopTextView.gameObject.SetActive(true);
-                    _uiStateMachine.PopTextView.SetTextValue("PERFECT");
-                    FindAndMergeCubes(5);
-                    break;
+                // case 2:
+                //     _coinsHolder.UpdateValue(2);
+                //     _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                //     _uiStateMachine.PopTextView.SetTextValue("NICE");
+                //     break;
+                // case 3:
+                //     _coinsHolder.UpdateValue(4);
+                //     _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                //     _uiStateMachine.PopTextView.SetTextValue("COOL");
+                //     break;
+                // case 4:
+                //     _coinsHolder.UpdateValue(8);
+                //     _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                //     _uiStateMachine.PopTextView.SetTextValue("RADICAL");
+                //     FindAndMergeCubes(1);
+                //     break;
+                // case 5:
+                //     _coinsHolder.UpdateValue(12);
+                //     _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                //     _uiStateMachine.PopTextView.SetTextValue("AWESOME");
+                //     FindAndMergeCubes(3);
+                //     break;
+                // case 6:
+                //     _coinsHolder.UpdateValue(20);
+                //     _uiStateMachine.PopTextView.gameObject.SetActive(true);
+                //     _uiStateMachine.PopTextView.SetTextValue("PERFECT");
+                //     FindAndMergeCubes(5);
+                //     break;
             }
         }
 
