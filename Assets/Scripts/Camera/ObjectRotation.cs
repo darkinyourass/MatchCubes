@@ -121,8 +121,15 @@ namespace Game.Camera
             // Debug.Log(_touch);
             if (!_touchMovement.IsSelectingCubes && _testGrid.IsCameraRotatingAvailable)
             {
-                MoveWithTouch();
-                MoveWithMouse();
+                if (Application.platform == RuntimePlatform.Android ||
+                    Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    MoveWithTouch();
+                }
+                else
+                {
+                    MoveWithMouse();
+                }
             }
 
         }

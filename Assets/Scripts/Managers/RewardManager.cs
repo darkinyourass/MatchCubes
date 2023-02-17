@@ -20,24 +20,24 @@ namespace Managers
 
         private static RewardManager _instance;
 
-        // public static RewardManager Instance
-        // {
-        //     get => _instance;
-        //     set => _instance = value;
-        // }
-        //
-        // private void Awake()
-        // {   
-        //     if (Instance != null && Instance != this)
-        //     {
-        //         Destroy(this);
-        //     }
-        //
-        //     else
-        //     {
-        //         Instance = this;
-        //     }
-        // }
+        public static RewardManager Instance
+        {
+            get => _instance;
+            set => _instance = value;
+        }
+        
+        private void Awake()
+        {   
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+        
+            else
+            {
+                Instance = this;
+            }
+        }
 
         private void Start()
         {
@@ -84,7 +84,6 @@ namespace Managers
             {
 
                 _coinsPanel.transform.GetChild(i).DOScale(1f, 0.3f).SetDelay(delay).SetEase(Ease.OutBack);
-                
 
                 _coinsPanel.transform.GetChild(i).GetComponent<RectTransform>().
                     DOAnchorPos(new Vector2(440f, 804f), 0.5f).SetDelay(delay + 0.3f).SetEase(Ease.OutBack);

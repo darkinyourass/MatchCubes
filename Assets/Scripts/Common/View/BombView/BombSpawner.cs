@@ -14,6 +14,7 @@ namespace Common.View
         [Header("Objects")]
         [SerializeField] private Bomb _bombPrefab;
         [SerializeField]private Transform _target;
+        [SerializeField] private Vector3 _spawnPosition;
 
         private Camera _camera;
 
@@ -71,24 +72,36 @@ namespace Common.View
 
         private IEnumerator ThrowBombCo()
         {
+            _spawnPosition = Vector3.zero;
             float timeElapsed = 0;
-            var startPosition = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 6f));
-            
-            SpawnDamageBall(startPosition);
+            _spawnPosition = _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 6f));
+
+            // var position = _spawnPosition.position;
+            SpawnDamageBall(_spawnPosition);
+            _bombRigidBody.velocity = Vector3.zero;
             
             var targetPosition = _target.position;
-            var direction = (targetPosition - startPosition).normalized;
-            var distance = Vector3.Distance(startPosition, targetPosition);
+            var direction = (targetPosition - _spawnPosition).normalized;
+            var distance = Vector3.Distance(_spawnPosition, targetPosition);
             var force = direction * distance / _movementDuration;
             
+            
+            _bombRigidBody.AddForce(force, ForceMode.Acceleration);
+            // timeElapsed += Time.deltaTime;
             while (timeElapsed < _movementDuration)
             {
-                _bombRigidBody.AddForce(force, ForceMode.Force);
+                _bombRigidBody.AddForce(force, ForceMode.Acceleration);
                 timeElapsed += Time.deltaTime;
                 yield return null;
             }
-            
-            
+
+            // StartCoroutine(TimerCo());
+        }
+
+        private IEnumerator TimerCo()
+        {
+            yield return new WaitForSeconds(0.5f);
+            _bombRigidBody.velocity = Vector3.zero;
         }
         
         private IEnumerator StartCooldownCo()

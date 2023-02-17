@@ -6,6 +6,7 @@ using Common;
 using Common.View;
 using Cubes.ObjectPooling.PopUpTextPool;
 using DefaultNamespace;
+using DG.Tweening;
 using Game.Camera;
 using GameInput;
 using UI;
@@ -77,6 +78,8 @@ public class TouchMovement : MonoBehaviour
     public event Action OnTutorialSecondCubeClick;
     public event Action OnTutorialThirdClick;
     public event Action OnTutorialFourthClick;
+
+    public event Action<int> OnGetCoins;
 
     public bool IsSelectingCubes { get; set; }
 
@@ -201,12 +204,20 @@ public class TouchMovement : MonoBehaviour
                 OnMatchingCubes?.Invoke(SelectedCubes);
                 AudioManager.Instance.PlayAudioClip(_matchAudioClip);
                 OnMakeMove?.Invoke();
+                OnGetCoins?.Invoke(3);
+                SpawnCoins(3);
                 _secondSelectable = null;
                 CheckForMatchingSelectablesCount();
                 EmptyCubes.AddRange(SelectedCubes);
             }
         }
     }
+
+    private void SpawnCoins(int count)
+    {
+        
+    }
+    
 
     private bool CheckForMoving()
     {
@@ -217,106 +228,6 @@ public class TouchMovement : MonoBehaviour
 
         return true;
     }
-
-    // private void SelectCubes()
-    // {
-    //     if (EventSystem.current.IsPointerOverGameObject())
-    //     {
-    //         return;
-    //     }
-    //     
-    //     _ray = _camera.ScreenPointToRay(Input.mousePosition);
-    //
-    //     if (Physics.Raycast(_ray, out var hit, _layerMask))
-    //     {
-    //         _selection = hit.transform.GetComponent<ISelectable>();
-    //         if (_selection != null)
-    //         {
-    //             if (_firstSelectable == null)
-    //             {
-    //                 _firstSelectable = _selection;
-    //                 _firstSelectablePosition = _firstSelectable.ColorTypeTransform.position;
-    //                 SetEmptyCubes();
-    //                 CheckForNearestSelectables();
-    //             }
-    //
-    //             // foreach (var cube in SecondDirectionSelectables)
-    //             // {
-    //             //     if (_firstSelectable != null)
-    //             //     {
-    //             //         if (_secondSelectable != null)
-    //             //         {
-    //             //             if (_secondSelectable != selectable 
-    //             //                 && selectable != _firstSelectable 
-    //             //                 && selectable == cube 
-    //             //                 && SecondDirectionSelectables.Contains(selectable))
-    //             //             {
-    //             //                 _secondSelectable.SelectDeselect();
-    //             //                 _previousSelectable = _secondSelectable;
-    //             //                 _secondSelectable.SelectedCubeLineRenderer.enabled = false;
-    //             //                 _secondSelectable = selectable;
-    //             //                 // Debug.Log($"Second choice {_secondSelectable.ColorType}");
-    //             //             }
-    //             //         }
-    //             //     
-    //             //         if (_secondSelectable == null && selectable != _firstSelectable && selectable == cube)
-    //             //         {
-    //             //             // _previousSelectable = selectable;
-    //             //             _secondSelectable = selectable;
-    //             //             // Debug.Log($"First choice {_secondSelectable.ColorType}");
-    //             //         }
-    //             //     }
-    //             // }
-    //             //
-    //             // if (_secondSelectable != null)
-    //             // {
-    //             //     Debug.Log(_secondSelectable.ColorType);
-    //             // }
-    //             // if (_firstSelectable.ColorType == ColorType.White)
-    //             // {
-    //             //     CheckForWhiteCube();
-    //             //     return;
-    //             // }
-    //             
-    //             if (_selection.IsSelected)
-    //             {
-    //                 return;
-    //             }
-    //
-    //             foreach (var cube in SecondDirectionSelectables)
-    //             {
-    //                 if (cube == _selection)
-    //                 {
-    //                     CheckForCubeSelectionDirection();
-    //                 }
-    //             }
-    //
-    //             _lastSelectable = _selection;
-    //             _lastSelectablePosition = _lastSelectable.ColorTypeTransform.position;
-    //             SelectedCubes.Add(_selection);
-    //             _selection.SelectDeselect();
-    //             _selection.SelectedCubeLineRenderer.enabled = true;
-    //             
-    //             Debug.Log(SelectedCubes.Count);
-    //             
-    //             // if (_previousSelectable != null)
-    //             // {
-    //             //     if (_secondSelectable != _previousSelectable)
-    //             //     {
-    //             //         foreach (var cube in SelectedCubes)
-    //             //         {
-    //             //             if (cube == _previousSelectable)
-    //             //             {
-    //             //                 SelectedCubes.Remove(cube);
-    //             //                 return;
-    //             //             }
-    //             //         }
-    //             //     }
-    //             // }
-    //         }
-    //     }
-    // }
-
 
     private bool IsGoingBackwards(Vector3 lastPosition, Vector3 currentPosition, Vector3 firstPosition)
     {

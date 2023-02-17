@@ -48,7 +48,8 @@ MonoBehaviour:
   _bombPrefab: {fileID: 8938407181254237881, guid: d5522fab8c8ed5e42a56a1a7c737c04c,
     type: 3}
   _target: {fileID: 0}
-  _movementDuration: 1.1
+  _spawnPosition: {x: 0, y: 0, z: 0}
+  _movementDuration: 0.8
   _maxCooldown: 5
   _currentCooldown: 0
   _fill: {fileID: 0}

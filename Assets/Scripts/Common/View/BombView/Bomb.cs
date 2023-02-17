@@ -13,6 +13,9 @@ namespace Common.View
         [SerializeField] private Collider _collider;
         [SerializeField] private Collider _collision;
 
+        private float _timer;
+        [SerializeField] private float _destroyTime = 5f;
+
         private TouchMovement _touchMovement;
 
         private WinCondition _winCondition;
@@ -32,13 +35,29 @@ namespace Common.View
         
         private bool IsTriggered { get; set; }
 
-        
+
+        private void Start()
+        {
+            
+        }
+
         private void OnEnable()
         {
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Raycast"), LayerMask.NameToLayer("Bomb"), true);
             _winCondition = FindObjectOfType<WinCondition>();
             _touchMovement = FindObjectOfType<TouchMovement>();
             _bombPool = FindObjectOfType<BombPool>();
+            _timer = _destroyTime;
+        }
+
+        private void Update()
+        {
+            while (_timer > 0)
+            {
+                _timer -= Time.deltaTime;
+                return;
+            }
+            _bombPool.ReturnToPool(this);
         }
 
         private void OnTriggerEnter(Collider other)

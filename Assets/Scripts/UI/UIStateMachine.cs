@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 using Cubes;
+using DG.Tweening;
+using Managers;
 using Random = UnityEngine.Random;
 
 namespace UI
@@ -18,6 +20,7 @@ namespace UI
         [SerializeField] private Canvas _winCanvas;
         [SerializeField] private Canvas _menuCanvas;
         [SerializeField] private Canvas _loseCanvas;
+        [SerializeField] private Canvas _coinsCanvas;
         // [SerializeField] private AudioClip _audioClip;
 
         [Header("UI elements")]
@@ -26,6 +29,10 @@ namespace UI
         [SerializeField] private Stars _stars;
         [SerializeField] private ProgressBarValue _progressBarValue;
         [SerializeField] private GameObject _tapToPlayBackground;
+        
+        [Header("Prefab")]
+        [SerializeField] private GameObject _coinPrefab;
+        
 
         [Header("Stars values")] 
         [SerializeField] private int _oneStarValue;
@@ -44,6 +51,8 @@ namespace UI
         private float _currentTimeValue;
 
         public event Action OnBombButtonClick;
+
+        // public event Action OnLevelEndCoins;
 
         // public PopUpTextView PopTextView => _popUpTextView;
         
@@ -83,6 +92,8 @@ namespace UI
 
         public Canvas LoseCanvas => _loseCanvas;
 
+        public Canvas CoinsCanvas => _coinsCanvas;
+
         public UIBaseState CurrentState { get; set; }
         private UIStateFactory StateFactory { get; set; }
 
@@ -105,6 +116,7 @@ namespace UI
             CurrentState = StateFactory.Gameplay();
             CurrentState.EnterState();
             _playButton.OnLevelTypeButtonClicked += OnLevelChose;
+            _touchMovement.OnGetCoins += SpawnCoin;
             _stars.ResetStars();
         }
         
@@ -126,9 +138,10 @@ namespace UI
 
         private void Update()
         {
+            Debug.Log($"Current level {LevelNumber}");
             Debug.Log($"Current scene {SceneIndex}");
 
-            if (Input.touchCount > 0)
+            if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
             {
                 _tapToPlayBackground.SetActive(false);
             }
@@ -161,15 +174,22 @@ namespace UI
 
         private void OnLevelEnd()
         {
+            // OnLevelEndCoins?.Invoke();
             StartCoroutine(SetGridFalseCo());
+            // UpdateLevelValue(1);
         }
 
         private IEnumerator SetGridFalseCo()
         {
             const float delay = 2f;
             yield return new WaitForSeconds(delay);
+            UpdateLevelValue(1);
+            _coinsHolder.UpdateValue(25);
+            PlayerPrefs.SetInt("LevelNumber", LevelNumber);
+            PlayerPrefs.Save();
             _stars.SetStars(_progressBarValue.CurrentValue, _oneStarValue, _twoStarValue, _threeStarValue);
             Grid.gameObject.SetActive(false);
+            RewardManager.Instance.RewardCoins();
             IsLevelWon = true;
             _progressBarValue.ResetProgressValue();
         }
@@ -229,21 +249,22 @@ namespace UI
         {
             // Grid.gameObject.SetActive(false);
             IsNextLevelButtonPressed = true;
-            UpdateLevelValue(1);
+            // UpdateLevelValue(1);
             Grid.UpdateValue(true);
-            // _getCoinsButton.gameObject.SetActive(true);
-            StartCoroutine(SetButtonTrueCo());
+            _getCoinsButton.gameObject.SetActive(true);
+            // StartCoroutine(SetButtonTrueCo());
             SceneManager.LoadScene(LevelNumber > 5 ? Random.Range(1, 6) : LevelNumber);
-            PlayerPrefs.SetInt("LevelNumber", LevelNumber);
-            PlayerPrefs.Save();
+            // UpdateLevelValue(1);
+            // PlayerPrefs.SetInt("LevelNumber", LevelNumber);
+            // PlayerPrefs.Save();
         }
 
-        private IEnumerator SetButtonTrueCo()
-        {
-            const float delay = 0.1f; 
-            yield return new WaitForSeconds(delay);
-            _getCoinsButton.gameObject.SetActive(true);
-        }
+        // private IEnumerator SetButtonTrueCo()
+        // {
+        //     const float delay = 0.1f; 
+        //     yield return new WaitForSeconds(delay);
+        //     _getCoinsButton.gameObject.SetActive(true);
+        // }
 
         private void UpdateLevelValue(int value)
         {
@@ -258,15 +279,36 @@ namespace UI
         public void OnGetCoinsButtonClick()
         {
             _getCoinsButton.gameObject.SetActive(false);
-            _coinsHolder.UpdateValue(25);
         }
 
         public void OnBombBonusClick()
         {
             if (!_touchMovement.IsSelectingCubes)
             {
-                // _coinsHolder.UpdateValue(-75);
                 OnBombButtonClick?.Invoke();
+            }
+        }
+
+        private void SpawnCoin(int count)
+        {
+            var delay = 0f;
+        
+            for (int i = 0; i < count; i++)
+            {
+                var mousePosition = Input.mousePosition;
+                var canvasRect = CoinsCanvas.GetComponent<RectTransform>();
+
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePosition,
+                    null, out var localPoint);
+
+                var coin = Instantiate(_coinPrefab, Vector3.zero, Quaternion.identity);
+                coin.transform.SetParent(CoinsCanvas.transform, false);
+                coin.GetComponent<RectTransform>().anchoredPosition = localPoint;
+
+                coin.GetComponent<RectTransform>().GetComponent<RectTransform>().
+                    DOAnchorPos(new Vector2(440f, 864f), 0.3f).SetDelay(delay + 0.1f).SetEase(Ease.OutBack);
+            
+                delay += 0.1f;
             }
         }
         

@@ -221,6 +221,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &432207300 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3229203465727918841, guid: 3d3a1b0c4bda9c447b00206a2299515c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3902424745894920572}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa351b3ddee44a8985551d6a3650ffb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &531839003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 670976303, guid: 33e2899cf443c9e488eb38b83239a12d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7056511330198646753}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 046223c57ffe463584e1c6161d7e3f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &564370944 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8700525575491472548, guid: ef2256dcfa07e034685d55b51287faa2,
@@ -412,10 +436,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _touchMovement: {fileID: 7056511330198646754}
   _testGrid: {fileID: 7056511330198646755}
-  _timer: {fileID: 1943406387412239237}
+  _timer: {fileID: 432207300}
   _uiStateMachine: {fileID: 1823935851}
   _getCoinsButton: {fileID: 1978020925383881654}
   _coinsHolder: {fileID: 1515555566187138531}
+  _winCondition: {fileID: 531839003}
 --- !u!1 &1052490307
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,18 +799,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de201899e21d3a141b7b2f6287064e3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1943406387412239237 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3229203465727918841, guid: 3d3a1b0c4bda9c447b00206a2299515c,
-    type: 3}
-  m_PrefabInstance: {fileID: 3902424745894920572}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa351b3ddee44a8985551d6a3650ffb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1978020925383881654 stripped
