@@ -291,8 +291,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -301,7 +301,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.75
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -820,6 +820,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3902424744191742370, guid: 3d3a1b0c4bda9c447b00206a2299515c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -3.1940918
+      objectReference: {fileID: 0}
     - target: {fileID: 3902424744346373141, guid: 3d3a1b0c4bda9c447b00206a2299515c,
         type: 3}
       propertyPath: m_Name
@@ -1070,6 +1075,21 @@ PrefabInstance:
         type: 3}
       propertyPath: _distanceToTarget
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6396661975042530157, guid: 54c640bac32f6d746ab56f46efa35abe,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.9411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 6396661975042530157, guid: 54c640bac32f6d746ab56f46efa35abe,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.80784315
+      objectReference: {fileID: 0}
+    - target: {fileID: 6396661975042530157, guid: 54c640bac32f6d746ab56f46efa35abe,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.4862745
       objectReference: {fileID: 0}
     - target: {fileID: 6396661975042530158, guid: 54c640bac32f6d746ab56f46efa35abe,
         type: 3}

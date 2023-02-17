@@ -253,7 +253,7 @@ namespace UI
             Grid.UpdateValue(true);
             _getCoinsButton.gameObject.SetActive(true);
             // StartCoroutine(SetButtonTrueCo());
-            SceneManager.LoadScene(LevelNumber > 5 ? Random.Range(1, 6) : LevelNumber);
+            SceneManager.LoadScene(LevelNumber > 12 ? Random.Range(1, 12) : LevelNumber);
             // UpdateLevelValue(1);
             // PlayerPrefs.SetInt("LevelNumber", LevelNumber);
             // PlayerPrefs.Save();
